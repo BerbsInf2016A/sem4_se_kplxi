@@ -10,6 +10,7 @@ public class SetableCell extends Cell {
     public SetableCell(int xPos, int yPos) {
         super(xPos, yPos);
         this.listeners = new ArrayList<>();
+        this.value = OptionalInt.empty();
 
     }
 
@@ -25,13 +26,22 @@ public class SetableCell extends Cell {
         for (ICellValueChangedListener listener : this.listeners ) {
             listener.cellValueChanged(this);
         }
+        System.out.println("DEBUG: Cell value changed: row: " + this.row + " column: " + this.column + " value: " + this.value.getAsInt());
     }
 
-    public void sethSet(HorizontalCellSet hSet) {
+    public HorizontalCellSet getHorizontalSet() {
+        return hSet;
+    }
+
+    public VerticalCellSet getVerticalSet() {
+        return vSet;
+    }
+
+    public void setHorizontalSet(HorizontalCellSet hSet) {
         this.hSet = hSet;
     }
 
-    public void setvSet(VerticalCellSet vSet) {
+    public void setVerticalSet(VerticalCellSet vSet) {
         this.vSet = vSet;
     }
 
@@ -43,4 +53,8 @@ public class SetableCell extends Cell {
     }
 
 
+    @Override
+    public String toString(){
+        return "Row: " + this.row + " Column: " + this.column + " Value: " + this.value.getAsInt();
+    }
 }

@@ -2,22 +2,22 @@ package kakuro;
 
 public abstract class Cell {
 
-    public Cell(int xPos, int yPos) {
-        this.xPos = xPos;
-        this.yPos = yPos;
+    public Cell(int column, int row) {
+        this.column = column;
+        this.row = row;
     }
 
-    public int getxPos() {
-        return xPos;
+    public int getColumn() {
+        return column;
     }
 
-    public int getyPos() {
-        return yPos;
+    public int getRow() {
+        return row;
     }
 
-    int xPos;
+    int column;
 
-    int yPos;
+    int row;
 
 
 }
