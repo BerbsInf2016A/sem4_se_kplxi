@@ -7,6 +7,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -18,13 +19,16 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import kakuro.BlockingCell;
 import kakuro.Cell;
 import kakuro.Configuration;
 import kakuro.ConstraintCell;
+import kakuro.DoubleConstraintCell;
 import kakuro.PuzzleField;
 import kakuro.SetableCell;
+import kakuro.SingleConstraintCell;
 import sun.awt.ConstrainableGraphics;
 
 import java.util.ArrayList;
@@ -51,6 +55,8 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
 
+        primaryStage.setResizable(false);
+
         kakuro.Application kakuroSolver = new kakuro.Application();
         PuzzleField field = kakuroSolver.generateField();
         field.getCells().stream().filter(cell -> cell instanceof SetableCell)
@@ -67,23 +73,14 @@ public class Main extends Application {
 
 
                 root.add(stack, col, row);
-                rectangle.widthProperty().bind(root.widthProperty().divide(playFieldSize ));
-                //rectangle.widthProperty().set(root.widthProperty().get() / playFieldSize);
-                rectangle.heightProperty().bind(root.heightProperty().divide(totalSize)); rectangle.widthProperty().bind(root.widthProperty().divide(playFieldSize));
-                //rectangle.heightProperty().set(root.heightProperty().get() / totalSize);
+                rectangle.widthProperty().setValue(65);
+                rectangle.heightProperty().setValue(65);
                 rectangle.setStroke(Color.WHITE);
                 rectangle.setStrokeType(StrokeType.INSIDE);
 
 
-                Line diagonale = new Line();
-                stack.getChildren().add(diagonale);
-                diagonale.setStroke(Color.WHITE);
-                diagonale.startXProperty().bind(rectangle.xProperty().subtract( rectangle.widthProperty().divide(2)));
-                diagonale.endXProperty().bind(rectangle.xProperty().add(rectangle.widthProperty().divide(2)));
 
-                diagonale.startYProperty().bind(rectangle.yProperty().subtract(rectangle.heightProperty().divide(2)));
-                diagonale.endYProperty().bind(rectangle.yProperty().add(rectangle.heightProperty().divide(2)));
-                diagonale.setStrokeWidth(1);
+
 
             }
         }
@@ -92,7 +89,7 @@ public class Main extends Application {
         this.addSimulationSliderToThePane(root, Configuration.instance.rowAndColumnSize + 2);
 
         root.setPadding(new Insets(10,10,10,10));
-        primaryStage.setScene(new Scene(root, 650, 650));
+        primaryStage.setScene(new Scene(root, 610, 700));
         primaryStage.show();
 
 
@@ -179,15 +176,68 @@ public class Main extends Application {
 
     private StackPane bindKakuroCellToRectangle(Rectangle rectangle, int row, int col, PuzzleField field) {
         Cell fieldCell = field.getFieldCell(row, col);
-                StackPane stack = new StackPane();
+        StackPane stack = new StackPane();
 
         if (fieldCell instanceof ConstraintCell || fieldCell instanceof BlockingCell){
             rectangle.setFill(Color.BLACK);
             stack.getChildren().add(rectangle);
+            if (fieldCell instanceof ConstraintCell) {
+                Line diagonale = new Line();
+                stack.getChildren().add(diagonale);
+                diagonale.setStroke(Color.WHITE);
+                diagonale.startXProperty().bind(rectangle.xProperty().subtract( rectangle.widthProperty().divide(2)));
+                diagonale.endXProperty().bind(rectangle.xProperty().add(rectangle.widthProperty().divide(2)));
+
+                diagonale.startYProperty().bind(rectangle.yProperty().subtract(rectangle.heightProperty().divide(2)));
+                diagonale.endYProperty().bind(rectangle.yProperty().add(rectangle.heightProperty().divide(2)));
+                diagonale.setStrokeWidth(1);
+
+                if (fieldCell instanceof SingleConstraintCell){
+                    SingleConstraintCell single = (SingleConstraintCell) fieldCell;
+                    switch (single.getOrientation()) {
+                        case VERTICAL:
+                            Label vLimit = new Label(String.valueOf(single.getMaxValue()));
+                            vLimit.setFont(new Font("Arial", 15));
+                            vLimit.setAlignment(Pos.BOTTOM_CENTER);
+                            stack.setAlignment(vLimit, Pos.BOTTOM_CENTER);
+                            vLimit.setTextFill(Color.WHITE);
+                            stack.getChildren().add(vLimit);
+                            break;
+                        case HORIZONTAL:
+                            Label hLimit = new Label(String.valueOf(single.getMaxValue()));
+                            hLimit.setAlignment(Pos.CENTER_RIGHT);
+                            hLimit.setFont(new Font("Arial", 15));
+                            stack.setAlignment(hLimit, Pos.CENTER_RIGHT);
+                            hLimit.setTextFill(Color.WHITE);
+                            stack.getChildren().add(hLimit);
+                            break;
+                    }
+                }
+                if (fieldCell instanceof DoubleConstraintCell){
+                    DoubleConstraintCell doubleConstraint = (DoubleConstraintCell) fieldCell;
+                            Label vLimit = new Label(String.valueOf(doubleConstraint.getVerticalMax()));
+                            vLimit.setFont(new Font("Arial", 15));
+                            vLimit.setAlignment(Pos.BOTTOM_CENTER);
+                            stack.setAlignment(vLimit, Pos.BOTTOM_CENTER);
+                            vLimit.setTextFill(Color.WHITE);
+                            stack.getChildren().add(vLimit);
+                            Label hLimit = new Label(String.valueOf(doubleConstraint.getHorizontalMax()));
+                            hLimit.setFont(new Font("Arial", 15));
+                            hLimit.setAlignment(Pos.CENTER_RIGHT);
+                            stack.setAlignment(hLimit, Pos.CENTER_RIGHT);
+                            hLimit.setTextFill(Color.WHITE);
+                            stack.getChildren().add(hLimit);
+                    
+                }
+                
+                
+            }
+
         } else {
             SetableCellModel model = this.getModelCell(row, col);
             rectangle.setFill(Color.WHITE);
             Label text = new Label();
+            text.setFont(new Font("Arial", 30));
             text.textProperty().bind(model.valueProperty());
             stack.getChildren().addAll(rectangle, text);
         }
