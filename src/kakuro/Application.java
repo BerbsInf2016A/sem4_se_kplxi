@@ -1,10 +1,14 @@
 package kakuro;
 
+import javafx.application.Platform;
+
 import java.util.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.FutureTask;
 import java.util.stream.Collectors;
 
 public class Application {
-    public void run() {
+    public PuzzleField generateField() {
         PuzzleField field = this.generatePuzzle();
         System.out.println(field);
 
@@ -12,15 +16,15 @@ public class Application {
         this.generateVerticalSets(field);
         // start solver
         field.triggerSetUpdates();
-        if (this.solve2(field)){
-            field.printCellValues();
-        } else {
-            System.out.println("Algorithm failed.");
-        }
+        return field;
+    }
+
+    public boolean solveField(PuzzleField field) {
+        return this.solve(field);
     }
 
 
-    private boolean solve2(PuzzleField field) {
+    private boolean solve(PuzzleField field) {
         for (Cell rawCell : field.cells) {
             if (rawCell instanceof SetableCell){
                 SetableCell cell = (SetableCell) rawCell;
@@ -53,7 +57,19 @@ public class Application {
         return false;
     }
 
+
     private boolean solveForCell(SetableCell cell, PuzzleField field ){
+        try {
+            Thread.sleep(Configuration.instance.stepDelayInMilliseconds);
+
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            e.printStackTrace();
+        }
+        if (Thread.currentThread().isInterrupted()){
+            return false;
+        }
+
         // There are four possible states for the two sets of a cell:
         HorizontalCellSet hSet = cell.getHorizontalSet();
         VerticalCellSet vSet = cell.getVerticalSet();

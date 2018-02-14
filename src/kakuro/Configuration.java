@@ -3,5 +3,6 @@ package kakuro;
 public enum Configuration {
     instance;
 
-    int rowAndColumnSize = 9;
+    public int rowAndColumnSize = 9;
+    public int stepDelayInMilliseconds = 50;
 }

@@ -7,6 +7,7 @@ import java.util.OptionalInt;
 public class SetableCell extends Cell {
     private List<ICellValueChangedListener> listeners;
 
+
     public SetableCell(int xPos, int yPos) {
         super(xPos, yPos);
         this.listeners = new ArrayList<>();
@@ -60,5 +61,12 @@ public class SetableCell extends Cell {
             value = this.value.toString();
         }
         return super.toString() + " Value: " + value;
+    }
+
+    public String getUIValue() {
+        if (this.value.isPresent()){
+            return String.valueOf(this.value.getAsInt());
+        }
+        else return "-";
     }
 }

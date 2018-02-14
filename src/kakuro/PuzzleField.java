@@ -6,6 +6,10 @@ import java.util.Optional;
 
 public class PuzzleField {
 
+    public List<Cell> getCells() {
+        return cells;
+    }
+
     public PuzzleField(){
         this.cells = new ArrayList<>();
         this.hSets = new ArrayList<>();
