@@ -55,6 +55,10 @@ public class SetableCell extends Cell {
 
     @Override
     public String toString(){
-        return "Row: " + this.row + " Column: " + this.column + " Value: " + this.value.getAsInt();
+        String value = "null";
+        if (this.value.isPresent()) {
+            value = this.value.toString();
+        }
+        return super.toString() + " Value: " + value;
     }
 }

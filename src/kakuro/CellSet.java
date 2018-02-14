@@ -71,4 +71,19 @@ public abstract class CellSet implements ICellValueChangedListener{
         }
         return true;
     }
+
+    public boolean canBeSet(int possibleCandidate) {
+        int sum = 0;
+        for (SetableCell cell : this.cells ) {
+            if (cell.value.isPresent()) {
+                int value =cell.value.getAsInt();
+                if (value == possibleCandidate) return false;
+                sum += value;
+            }
+        }
+        if (sum  + possibleCandidate > this.maxValue) {
+            return false;
+        }
+        return true;
+    }
 }

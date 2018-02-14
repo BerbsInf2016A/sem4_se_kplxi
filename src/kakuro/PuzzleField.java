@@ -67,4 +67,30 @@ public class PuzzleField {
 
         }
     }
+
+    public boolean validateCellValues() {
+        for (HorizontalCellSet set : this.hSets ) {
+            int setSum = 0;
+            for (SetableCell cell : set.cells) {
+                if (cell.value.isPresent()) {
+                    setSum += cell.value.getAsInt();
+                } else {
+                    return false;
+                }
+            }
+            if (setSum != set.maxValue) return false;
+        }
+        for (VerticalCellSet set : this.vSets ) {
+            int setSum = 0;
+            for (SetableCell cell : set.cells) {
+                if (cell.value.isPresent()) {
+                    setSum += cell.value.getAsInt();
+                } else {
+                    return false;
+                }
+            }
+            if (setSum != set.maxValue) return false;
+        }
+        return true;
+    }
 }

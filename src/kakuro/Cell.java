@@ -19,5 +19,10 @@ public abstract class Cell {
 
     int row;
 
+    @Override
+    public String toString(){
+        return "Row: " + this.row + " Column: " + this.column;
+    }
+
 
 }

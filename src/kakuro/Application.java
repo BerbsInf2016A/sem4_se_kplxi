@@ -12,74 +12,118 @@ public class Application {
         this.generateVerticalSets(field);
         // start solver
         field.triggerSetUpdates();
-        this.solve2(field);
+        if (this.solve2(field)){
+            field.printCellValues();
+        } else {
+            System.out.println("Algorithm failed.");
+        }
     }
 
-    private void solve(PuzzleField field) {
+
+    private boolean solve2(PuzzleField field) {
         for (Cell rawCell : field.cells) {
             if (rawCell instanceof SetableCell){
                 SetableCell cell = (SetableCell) rawCell;
-                HorizontalCellSet hSet = cell.getHorizontalSet();
-                VerticalCellSet vSet = cell.getVerticalSet();
-                if (hSet.possibleCombinations.size() == 1 && vSet.possibleCombinations.size() == 1){
+                return solveForCell((SetableCell) field.getFieldCell(1,2), field);
+            }
+        }
+        return false;
+    }
 
-                    List<Integer> intersection = Helpers.intersect(hSet.possibleCombinations.get(0), vSet.possibleCombinations.get(0));
-                    for (int possibleCandidate : intersection ) {
-                        boolean candidateCanBeUsedElsewhereInHorizontalSet = hSet.canBeUsedElseWhere(cell, possibleCandidate);
-                        boolean candidateCanBeUsedElsewhereInVerticalSet = vSet.canBeUsedElseWhere(cell, possibleCandidate);
-                        if (!candidateCanBeUsedElsewhereInHorizontalSet || !candidateCanBeUsedElsewhereInVerticalSet) {
-                            int g = 0;
+    private boolean tryInterSections(List<Integer> intersections, SetableCell cell, HorizontalCellSet hSet, VerticalCellSet vSet, PuzzleField field ){
+        for (int possibleCandidate : intersections) {
+            if (hSet.canBeSet(possibleCandidate) && vSet.canBeSet(possibleCandidate)) {
+                cell.setValue(possibleCandidate);
+                SetableCell nextCell = field.getNextExmptyCell(cell);
+                if (nextCell == null) {
+                    if (field.validateCellValues()) {
+                        return true;
+                    }
+                    return false;
+                }
+                if (!solveForCell(nextCell, field)) {
+                    cell.value = OptionalInt.empty();
+                    continue;
+                } else {
+                    return true;
+                }
+            }
+        }
+        cell.value = OptionalInt.empty();
+        return false;
+    }
+
+    private boolean solveForCell(SetableCell cell, PuzzleField field ){
+        // There are four possible states for the two sets of a cell:
+        HorizontalCellSet hSet = cell.getHorizontalSet();
+        VerticalCellSet vSet = cell.getVerticalSet();
+
+        // Both sets have a combination set.
+        if (hSet.usedCombination != null && vSet.usedCombination != null) {
+            List<Integer> intersections = Helpers.intersect(vSet.usedCombination, hSet.usedCombination);
+            if (!tryInterSections(intersections, cell, hSet, vSet, field)){
+                return false;
+            } else {
+                return true;
+            }
+        }
+
+        // No set has a combination set.
+        if (hSet.usedCombination == null && vSet.usedCombination == null) {
+            for (List<Integer> hCombination : hSet.possibleCombinations ) {
+                for (List<Integer> vCombination : vSet.possibleCombinations) {
+                    List<Integer> intersections = Helpers.intersect(hCombination, vCombination);
+                    if (intersections.size() > 0) {
+                        hSet.setUsedCombination(hCombination);
+                        vSet.setUsedCombination(vCombination);
+
+                        if (!tryInterSections(intersections, cell, hSet, vSet, field)){
+                            hSet.resetUsedCombination();
+                            vSet.resetUsedCombination();
+                            continue;
+                        } else {
+                            return true;
                         }
                     }
                 }
             }
         }
-    }
 
-    private void solve2(PuzzleField field) {
-        for (Cell rawCell : field.cells) {
-            if (rawCell instanceof SetableCell){
-                SetableCell cell = (SetableCell) rawCell;
-                boolean value = solveForCell((SetableCell) field.getFieldCell(1,2), field);
-                int g = 3;
-            }
-        }
-    }
 
-    private boolean solveForCell(SetableCell cell, PuzzleField field ){
-        HorizontalCellSet hSet = cell.getHorizontalSet();
-        VerticalCellSet vSet = cell.getVerticalSet();
+        // Horizontal set has a combination set, vertical set has no combination set.
+        if (hSet.usedCombination != null && vSet.usedCombination == null) {
+            for (List<Integer> vCombination : vSet.possibleCombinations ) {
+                List<Integer> intersections = Helpers.intersect(hSet.usedCombination, vCombination);
+                if (intersections.size() > 0) {
+                    vSet.setUsedCombination(vCombination);
 
-        for (List<Integer> vCombination : cell.getVerticalSet().possibleCombinations ) {
-            for (List<Integer> hCombination : cell.getHorizontalSet().possibleCombinations) {
-                List<Integer> intersections = Helpers.intersect(vCombination, hCombination);
-                for (int possibleCandidate : intersections) {
-                    cell.getHorizontalSet().setUsedCombination(hCombination);
-                    cell.getVerticalSet().setUsedCombination(vCombination);
-
-                    if (!hSet.valueCanBeUsed(possibleCandidate) || !vSet.valueCanBeUsed(possibleCandidate)) {
-                        continue;
-                    }
-// TODO Somehow endlees loop
-                    cell.setValue(possibleCandidate);
-                    SetableCell nextCell = field.getNextExmptyCell(cell);
-                    if (nextCell == null) {
-                        int g = 0;
-                        field.printCellValues();
-                    }
-                    if (!solveForCell(nextCell, field)) {
-                        cell.value = OptionalInt.empty();
+                    if (!tryInterSections(intersections, cell, hSet, vSet, field)){
+                        vSet.resetUsedCombination();
                         continue;
                     } else {
                         return true;
                     }
                 }
-
             }
         }
 
-        cell.getHorizontalSet().resetUsedCombination();
-        cell.getVerticalSet().resetUsedCombination();
+        // Vertical set has a combination set, horizontal set has no combination set.
+        if (hSet.usedCombination == null && vSet.usedCombination != null) {
+            for (List<Integer> hCombination : hSet.possibleCombinations ) {
+                List<Integer> intersections = Helpers.intersect(vSet.usedCombination, hCombination);
+                if (intersections.size() > 0) {
+                    hSet.setUsedCombination(hCombination);
+
+                    if (!tryInterSections(intersections, cell, hSet, vSet, field)){
+                        hSet.resetUsedCombination();
+                        continue;
+                    } else {
+                        return true;
+                    }
+                }
+            }
+        }
+
         cell.value = OptionalInt.empty();
         return false;
     }
@@ -183,8 +227,8 @@ public class Application {
         PuzzleField field = new PuzzleField();
         field.cells.addAll(cells);
         field.cells.addAll(this.generateMissingValueCells(field));
-        Comparator<Cell> comparator = Comparator.comparing(c -> c.column);
-        comparator = comparator.thenComparing(Comparator.comparing(c -> c.row));
+        Comparator<Cell> comparator = Comparator.comparing(c -> c.row);
+        comparator = comparator.thenComparing(Comparator.comparing(c -> c.column));
         field.cells = field.cells.stream().sorted(comparator).collect(Collectors.toList());
         return field;
     }
