@@ -34,7 +34,5 @@ public class Main extends Application {
 
         primaryStage.setScene(view.generateUIScene());
         primaryStage.show();
-
-
     }
 }

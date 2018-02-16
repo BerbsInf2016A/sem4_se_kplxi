@@ -19,32 +19,60 @@ import kakuro.SingleConstraintCell;
 
 import java.util.Optional;
 
+/**
+ * A view for the kakuro solving algorithm
+ */
 public class KakuroView {
 
+    /**
+     * The size of the playing field.
+     */
     final int playFieldSize = Configuration.instance.rowAndColumnSize;
 
+    /**
+     * The controller for the view.
+     */
     private final KakuroController controller;
+
+    /**
+     * The model for the view.
+     */
     private KakuroModel model;
 
 
+    /**
+     * Constructor for the view.
+     *
+     * @param controller The controller for the view.
+     * @param model The model for the view.
+     */
     public KakuroView(KakuroController controller, KakuroModel model) {
-
         this.controller = controller;
         this.model = model;
     }
 
+    /**
+     * Generate the scene for the ui.
+     *
+     * @return The generated scene.
+     */
     public Scene generateUIScene() {
         GridPane root = new GridPane();
         root.setPadding(new Insets(10, 10, 10, 10));
 
-        this.addRectanglesToThePane(root);
+        this.addCellRectanglesToThePane(root);
         this.addButtonControlsToThePane(root, Configuration.instance.rowAndColumnSize + 1);
         this.addSimulationSliderToThePane(root, Configuration.instance.rowAndColumnSize + 2);
 
         return new Scene(root, 610, 700);
     }
 
-    private void addRectanglesToThePane(GridPane root) {
+    /**
+     * Add the rectangles for the cells to the view.
+     *
+     * @param root The root element to add the ui elements to.
+     */
+    private void addCellRectanglesToThePane(GridPane root) {
         for (int row = 0; row < playFieldSize; row++) {
             for (int col = 0; col < playFieldSize; col++) {
 
@@ -61,6 +89,13 @@ public class KakuroView {
         }
     }
 
+    /**
+     * Gets cell for the specified position.
+     *
+     * @param row The row position.
+     * @param column The column position.
+     * @return The cell at the position.
+     */
     private Cell getFieldCell(int row, int column) {
         if (row > Configuration.instance.rowAndColumnSize || column > Configuration.instance.rowAndColumnSize || row < 0 || column < 0) {
             throw new RuntimeException("Invalid row column combination. row: " + row + " column: " + column);
@@ -70,6 +105,13 @@ public class KakuroView {
         return null;
     }
 
+    /**
+     * Gets the setable cell for the specified position.
+     *
+     * @param row The row position.
+     * @param column The column position.
+     * @return The cell at the position.
+     */
     private SetableCellModel getModelCell(int row, int column) {
         if (row > Configuration.instance.rowAndColumnSize || column > Configuration.instance.rowAndColumnSize || row < 0 || column < 0) {
             throw new RuntimeException("Invalid row column combination. row: " + row + " column: " + column);
@@ -79,6 +121,14 @@ public class KakuroView {
         return null;
     }
 
+    /**
+     * Bind the cells of the kakuro solving algorithm to the ui rectangles.
+     *
+     * @param rectangle The rectangle which should be bound.
+     * @param row The row index.
+     * @param col The column index.
+     * @return A stack pane containing the ui elements.
+     */
     private StackPane bindKakuroCellToRectangle(Rectangle rectangle, int row, int col) {
         Cell fieldCell = this.getFieldCell(row, col);
         StackPane stack = new StackPane();
@@ -105,7 +155,12 @@ public class KakuroView {
         return stack;
     }
 
-
+    /**
+     * Add a slider for the simulation speed to the ui.
+     *
+     * @param root The root ui element to add the slider to.
+     * @param row The row in which the slider should be placed.
+     */
     private void addSimulationSliderToThePane(GridPane root, int row) {
 
         Label descriptionLabel = new Label("Simulation-Delay:");
@@ -127,6 +182,12 @@ public class KakuroView {
         root.add(slider, 1, (row + 1), Configuration.instance.rowAndColumnSize - 2, 1);
     }
 
+    /**
+     * Add the button controls to the ui.
+     *
+     * @param root The ui root element to add the new ui elements to.
+     * @param row The row in which the buttons should be placed.
+     */
     private void addButtonControlsToThePane(GridPane root, int row) {
         Button startButton = UIGenerationHelpers.generateDefaultButton("Start");
 
@@ -142,5 +203,4 @@ public class KakuroView {
         exitButton.setOnAction(this.controller.exitButtonEventHandler);
         root.add(exitButton, 5, row, 3, 1);
     }
-
 }

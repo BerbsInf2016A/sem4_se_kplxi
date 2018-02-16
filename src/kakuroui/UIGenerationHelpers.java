@@ -14,7 +14,15 @@ import kakuro.Configuration;
 import kakuro.DoubleConstraintCell;
 import kakuro.SingleConstraintCell;
 
+/**
+ * A class containing helper methods for the creation of ui elements.
+ */
 public class UIGenerationHelpers {
+    /**
+     * Generate a slider with default values.
+     *
+     * @return The created slider.
+     */
     public static Slider generateDefaultSlider() {
         Slider slider = new Slider();
 
@@ -32,6 +40,12 @@ public class UIGenerationHelpers {
         return slider;
     }
 
+    /**
+     * Generate a button with default values.
+     *
+     * @param text The text on the button.
+     * @return The created Button.
+     */
     public static Button generateDefaultButton(String text) {
         Button button = new Button(text);
         button.setMaxWidth(Double.MAX_VALUE);
@@ -40,19 +54,38 @@ public class UIGenerationHelpers {
         return button;
     }
 
-    private static Label generateDefaultSetableCellTextLabel(SetableCellModel model) {
+    /**
+     * Generate a label for setable cell with default values and bind it to the model.
+     *
+     * @param model The model to bind the label to.
+     * @return The created label.
+     */
+    private static Label generateAndBindDefaultSetableCellTextLabel(SetableCellModel model) {
         Label text = new Label();
         text.setFont(new Font("Arial", 30));
         text.textProperty().bind(model.valueProperty());
         return text;
     }
 
+    /**
+     * Generate the label for a model and bind it to the model-
+     *
+     * @param stack The stack to add the ui elements to.
+     * @param rectangle The rectangle for the cell.
+     * @param model The model to bind to.
+     */
     public static void generateAndBindSetableCellRectangle(StackPane stack, Rectangle rectangle, SetableCellModel model) {
-        Label setableCellTextLabel = UIGenerationHelpers.generateDefaultSetableCellTextLabel(model);
+        Label setableCellTextLabel = UIGenerationHelpers.generateAndBindDefaultSetableCellTextLabel(model);
         rectangle.setFill(Color.WHITE);
         stack.getChildren().addAll(rectangle, setableCellTextLabel);
     }
 
+    /**
+     * Generates a constraint cell with default values.
+     *
+     * @param stack The stack to add the ui elements to.
+     * @param rectangle The rectangle for the cell.
+     */
     public static void generateDefaultConstraintCell(StackPane stack, Rectangle rectangle) {
         Line diagonale = new Line();
         stack.getChildren().add(diagonale);
@@ -65,10 +98,16 @@ public class UIGenerationHelpers {
         diagonale.setStrokeWidth(1);
     }
 
-    public static void generateDefaultSingleConstraintCell(StackPane stack, SingleConstraintCell single) {
-        switch (single.getOrientation()) {
+    /**
+     * Generate a single constraint cell with default values.
+     *
+     * @param stack The stack to add the ui elements to.
+     * @param cell The single cell
+     */
+    public static void generateDefaultSingleConstraintCell(StackPane stack, SingleConstraintCell cell) {
+        switch (cell.getOrientation()) {
             case VERTICAL:
-                Label vLimit = new Label(String.valueOf(single.getMaxValue()));
+                Label vLimit = new Label(String.valueOf(cell.getMaxValue()));
                 vLimit.setFont(new Font("Arial", 15));
                 vLimit.setAlignment(Pos.BOTTOM_CENTER);
                 vLimit.paddingProperty().setValue(new Insets(3, 3, 3, 3));
@@ -77,7 +116,7 @@ public class UIGenerationHelpers {
                 stack.getChildren().add(vLimit);
                 break;
             case HORIZONTAL:
-                Label hLimit = new Label(String.valueOf(single.getMaxValue()));
+                Label hLimit = new Label(String.valueOf(cell.getMaxValue()));
                 hLimit.setAlignment(Pos.CENTER_RIGHT);
                 hLimit.paddingProperty().setValue(new Insets(3, 3, 3, 3));
                 hLimit.setFont(new Font("Arial", 15));
@@ -88,8 +127,14 @@ public class UIGenerationHelpers {
         }
     }
 
-    public static void generateDefaultDoubleConstraintCell(StackPane stack, DoubleConstraintCell doubleConstraint) {
-        Label vLimit = new Label(String.valueOf(doubleConstraint.getVerticalMax()));
+    /**
+     * Generate a double constraint cell with default values.
+     *
+     * @param stack The stack to add the ui elements to.
+     * @param cell The single cell
+     */
+    public static void generateDefaultDoubleConstraintCell(StackPane stack, DoubleConstraintCell cell) {
+        Label vLimit = new Label(String.valueOf(cell.getVerticalMax()));
 
         vLimit.setFont(new Font("Arial", 15));
         vLimit.paddingProperty().setValue(new Insets(3, 3, 3, 3));
@@ -99,7 +144,7 @@ public class UIGenerationHelpers {
         vLimit.setTextFill(Color.WHITE);
         stack.getChildren().add(vLimit);
 
-        Label hLimit = new Label(String.valueOf(doubleConstraint.getHorizontalMax()));
+        Label hLimit = new Label(String.valueOf(cell.getHorizontalMax()));
 
         hLimit.paddingProperty().setValue(new Insets(3, 3, 3, 3));
         hLimit.setFont(new Font("Arial", 15));
