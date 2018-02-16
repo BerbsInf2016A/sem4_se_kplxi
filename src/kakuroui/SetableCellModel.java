@@ -2,12 +2,20 @@ package kakuroui;
 
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import kakuro.ICellValueChangedListener;
 import kakuro.SetableCell;
 
-public class SetableCellModel implements ICellValueChangedListener{
+public class SetableCellModel implements ICellValueChangedListener {
     private final int row;
+    private final int column;
+    private SimpleStringProperty value = new SimpleStringProperty(this, "value");
+
+    public SetableCellModel(SetableCell cell) {
+        cell.addValueChangedListener(this);
+        this.row = cell.getRow();
+        this.column = cell.getColumn();
+        this.value.set("-");
+    }
 
     public int getRow() {
         return row;
@@ -17,17 +25,7 @@ public class SetableCellModel implements ICellValueChangedListener{
         return column;
     }
 
-    private final int column;
-    private SimpleStringProperty value = new SimpleStringProperty(this, "value");
-
-    public SetableCellModel(SetableCell cell){
-        cell.addValueChangedListener(this);
-        this.row = cell.getRow();
-        this.column = cell.getColumn();
-        this.value.set("-");
-    }
-
-    public SimpleStringProperty valueProperty(){
+    public SimpleStringProperty valueProperty() {
         return value;
     }
 

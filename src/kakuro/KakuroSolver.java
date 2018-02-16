@@ -1,44 +1,86 @@
 package kakuro;
 
-import javafx.application.Platform;
-
-import java.util.*;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.FutureTask;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.List;
+import java.util.OptionalInt;
 import java.util.stream.Collectors;
 
-public class Application {
-    public PuzzleField generateField() {
-        PuzzleField field = this.generatePuzzle();
-        System.out.println(field);
+/**
+ * An algorithm to solve a kakuro puzzle.
+ */
+public class KakuroSolver {
+    /**
+     * The play field.
+     */
+    private PuzzleField field;
 
-        this.generateHorizontalSets(field);
-        this.generateVerticalSets(field);
-        // start solver
-        field.triggerSetUpdates();
+    /**
+     * Get the field of the puzzle.
+     *
+     * @return The field of the puzzle.
+     */
+    public PuzzleField getField() {
         return field;
     }
 
-    public boolean solveField(PuzzleField field) {
-        return this.solve(field);
+    /**
+     * Generate the play field.
+     */
+    public void generateField() {
+        PuzzleField field = this.generatePuzzle();
+        if (Configuration.instance.printDebugMessages) {
+            System.out.println(field);
+        }
+
+        this.generateHorizontalSets(field);
+        this.generateVerticalSets(field);
+
+        field.triggerSetUpdates();
+        this.field = field;
     }
 
+    /**
+     * Solve the play field.
+     *
+     * @return True if the puzzle is solved, false if not.
+     */
+    public boolean solveField() {
+        return this.solve(this.field);
+    }
 
+    /**
+     * Solve the play field.
+     *
+     * @param field the play field to solve.
+     * @return True if the puzzle is solved, false if not.
+     */
     private boolean solve(PuzzleField field) {
         for (Cell rawCell : field.cells) {
-            if (rawCell instanceof SetableCell){
+            if (rawCell instanceof SetableCell) {
                 SetableCell cell = (SetableCell) rawCell;
-                return solveForCell((SetableCell) field.getFieldCell(1,2), field);
+                return solveForCell((SetableCell) field.getFieldCell(1, 2), field);
             }
         }
         return false;
     }
 
-    private boolean tryInterSections(List<Integer> intersections, SetableCell cell, HorizontalCellSet hSet, VerticalCellSet vSet, PuzzleField field ){
+    /**
+     * Tries every candidate for a cell in the specified intersection.
+     *
+     * @param intersections The possible values of the intersection of set combinations.
+     * @param cell The cell to add the value to.
+     * @param hSet The horizontal set of the cell.
+     * @param vSet The vertical set of the cell.
+     * @param field The play field.
+     * @return True if the field is solved, false if not.
+     */
+    private boolean tryInterSections(List<Integer> intersections, SetableCell cell, HorizontalCellSet hSet, VerticalCellSet vSet, PuzzleField field) {
         for (int possibleCandidate : intersections) {
             if (hSet.canBeSet(possibleCandidate) && vSet.canBeSet(possibleCandidate)) {
                 cell.setValue(possibleCandidate);
-                SetableCell nextCell = field.getNextExmptyCell(cell);
+                SetableCell nextCell = field.getNextEmptyCell(cell);
                 if (nextCell == null) {
                     if (field.validateCellValues()) {
                         return true;
@@ -46,19 +88,25 @@ public class Application {
                     return false;
                 }
                 if (!solveForCell(nextCell, field)) {
-                    cell.value = OptionalInt.empty();
+                    cell.setValue(OptionalInt.empty());
                     continue;
                 } else {
                     return true;
                 }
             }
         }
-        cell.value = OptionalInt.empty();
+        cell.setValue(OptionalInt.empty());
         return false;
     }
 
-
-    private boolean solveForCell(SetableCell cell, PuzzleField field ){
+    /**
+     * Tries to solve the puzzle for a specified cell.
+     *
+     * @param cell The cell to solve.
+     * @param field The current playing field.
+     * @return True if solved, false if not.
+     */
+    private boolean solveForCell(SetableCell cell, PuzzleField field) {
         try {
             Thread.sleep(Configuration.instance.stepDelayInMilliseconds);
 
@@ -66,7 +114,7 @@ public class Application {
             Thread.currentThread().interrupt();
             e.printStackTrace();
         }
-        if (Thread.currentThread().isInterrupted()){
+        if (Thread.currentThread().isInterrupted()) {
             return false;
         }
 
@@ -75,9 +123,9 @@ public class Application {
         VerticalCellSet vSet = cell.getVerticalSet();
 
         // Both sets have a combination set.
-        if (hSet.usedCombination != null && vSet.usedCombination != null) {
-            List<Integer> intersections = Helpers.intersect(vSet.usedCombination, hSet.usedCombination);
-            if (!tryInterSections(intersections, cell, hSet, vSet, field)){
+        if (hSet.getCurrentlyUsedCombination() != null && vSet.getCurrentlyUsedCombination() != null) {
+            List<Integer> intersections = Helpers.intersect(vSet.getCurrentlyUsedCombination(), hSet.getCurrentlyUsedCombination());
+            if (!tryInterSections(intersections, cell, hSet, vSet, field)) {
                 return false;
             } else {
                 return true;
@@ -85,17 +133,17 @@ public class Application {
         }
 
         // No set has a combination set.
-        if (hSet.usedCombination == null && vSet.usedCombination == null) {
-            for (List<Integer> hCombination : hSet.possibleCombinations ) {
-                for (List<Integer> vCombination : vSet.possibleCombinations) {
+        if (hSet.getCurrentlyUsedCombination() == null && vSet.getCurrentlyUsedCombination() == null) {
+            for (List<Integer> hCombination : hSet.getPossibleCombinations()) {
+                for (List<Integer> vCombination : vSet.getPossibleCombinations()) {
                     List<Integer> intersections = Helpers.intersect(hCombination, vCombination);
                     if (intersections.size() > 0) {
-                        hSet.setUsedCombination(hCombination);
-                        vSet.setUsedCombination(vCombination);
+                        hSet.setCurrentlyUsedCombination(hCombination);
+                        vSet.setCurrentlyUsedCombination(vCombination);
 
-                        if (!tryInterSections(intersections, cell, hSet, vSet, field)){
-                            hSet.resetUsedCombination();
-                            vSet.resetUsedCombination();
+                        if (!tryInterSections(intersections, cell, hSet, vSet, field)) {
+                            hSet.resetCurrentlyUsedCombination();
+                            vSet.resetCurrentlyUsedCombination();
                             continue;
                         } else {
                             return true;
@@ -104,17 +152,16 @@ public class Application {
                 }
             }
         }
-
-
+// TODO refactor duplicate code.
         // Horizontal set has a combination set, vertical set has no combination set.
-        if (hSet.usedCombination != null && vSet.usedCombination == null) {
-            for (List<Integer> vCombination : vSet.possibleCombinations ) {
-                List<Integer> intersections = Helpers.intersect(hSet.usedCombination, vCombination);
+        if (hSet.getCurrentlyUsedCombination() != null && vSet.getCurrentlyUsedCombination() == null) {
+            for (List<Integer> vCombination : vSet.getPossibleCombinations()) {
+                List<Integer> intersections = Helpers.intersect(hSet.getCurrentlyUsedCombination(), vCombination);
                 if (intersections.size() > 0) {
-                    vSet.setUsedCombination(vCombination);
+                    vSet.setCurrentlyUsedCombination(vCombination);
 
-                    if (!tryInterSections(intersections, cell, hSet, vSet, field)){
-                        vSet.resetUsedCombination();
+                    if (!tryInterSections(intersections, cell, hSet, vSet, field)) {
+                        vSet.resetCurrentlyUsedCombination();
                         continue;
                     } else {
                         return true;
@@ -124,14 +171,14 @@ public class Application {
         }
 
         // Vertical set has a combination set, horizontal set has no combination set.
-        if (hSet.usedCombination == null && vSet.usedCombination != null) {
-            for (List<Integer> hCombination : hSet.possibleCombinations ) {
-                List<Integer> intersections = Helpers.intersect(vSet.usedCombination, hCombination);
+        if (hSet.getCurrentlyUsedCombination() == null && vSet.getCurrentlyUsedCombination() != null) {
+            for (List<Integer> hCombination : hSet.getPossibleCombinations()) {
+                List<Integer> intersections = Helpers.intersect(vSet.getCurrentlyUsedCombination(), hCombination);
                 if (intersections.size() > 0) {
-                    hSet.setUsedCombination(hCombination);
+                    hSet.setCurrentlyUsedCombination(hCombination);
 
-                    if (!tryInterSections(intersections, cell, hSet, vSet, field)){
-                        hSet.resetUsedCombination();
+                    if (!tryInterSections(intersections, cell, hSet, vSet, field)) {
+                        hSet.resetCurrentlyUsedCombination();
                         continue;
                     } else {
                         return true;
@@ -140,24 +187,29 @@ public class Application {
             }
         }
 
-        cell.value = OptionalInt.empty();
+        cell.setValue(OptionalInt.empty());
         return false;
     }
 
+    /**
+     * Generates the horizontal sets.
+     *
+     * @param field The play field to generate the sets on.
+     */
     private void generateHorizontalSets(PuzzleField field) {
         for (int row = 0; row < Configuration.instance.rowAndColumnSize; row++) {
             HorizontalCellSet set = null;
-            for (int column = 0; column < Configuration.instance.rowAndColumnSize; column++){
+            for (int column = 0; column < Configuration.instance.rowAndColumnSize; column++) {
                 Cell cell = field.getFieldCell(row, column);
                 // Start of a horizontal set
-                if ( cell instanceof ConstraintCell && set == null) {
+                if (cell instanceof ConstraintCell && set == null) {
                     if (Helpers.isConstraintCellForOrientation(cell, Orientation.HORIZONTAL)) {
                         set = new HorizontalCellSet(Helpers.getMaxValueFromConstraintCells(cell, Orientation.HORIZONTAL));
                     }
                     continue;
                 }
                 // End of horizontal set, start of a new one
-                if ( cell instanceof ConstraintCell && set != null) {
+                if (cell instanceof ConstraintCell && set != null) {
                     if (set != null) {
                         field.hSets.add(set);
                         set = null;
@@ -177,11 +229,11 @@ public class Application {
                     continue;
                 }
                 // Cell part of the sets
-                if (cell instanceof SetableCell){
-                    set.addCell((SetableCell)cell);
+                if (cell instanceof SetableCell) {
+                    set.addCell((SetableCell) cell);
                 }
 
-                if(column == Configuration.instance.rowAndColumnSize - 1){
+                if (column == Configuration.instance.rowAndColumnSize - 1) {
                     if (set != null) {
                         field.hSets.add(set);
                         set = null;
@@ -191,20 +243,24 @@ public class Application {
         }
     }
 
+    /**
+     * Generates the vertical sets.
+     * @param field The playing field to generate the sets on.
+     */
     private void generateVerticalSets(PuzzleField field) {
         for (int column = 0; column < Configuration.instance.rowAndColumnSize; column++) {
             VerticalCellSet set = null;
-            for (int row = 0; row < Configuration.instance.rowAndColumnSize; row++){
+            for (int row = 0; row < Configuration.instance.rowAndColumnSize; row++) {
                 Cell cell = field.getFieldCell(row, column);
                 // Start of a horizontal set
-                if ( cell instanceof ConstraintCell && set == null) {
+                if (cell instanceof ConstraintCell && set == null) {
                     if (Helpers.isConstraintCellForOrientation(cell, Orientation.VERTICAL)) {
                         set = new VerticalCellSet(Helpers.getMaxValueFromConstraintCells(cell, Orientation.VERTICAL));
                     }
                     continue;
                 }
                 // End of horizontal set, start of a new one
-                if ( cell instanceof ConstraintCell && set != null) {
+                if (cell instanceof ConstraintCell && set != null) {
                     if (set != null) {
                         field.vSets.add(set);
                         set = null;
@@ -224,11 +280,11 @@ public class Application {
                     continue;
                 }
                 // Cell part of the sets
-                if (cell instanceof SetableCell){
-                    set.addCell((SetableCell)cell);
+                if (cell instanceof SetableCell) {
+                    set.addCell((SetableCell) cell);
                 }
 
-                if(row == Configuration.instance.rowAndColumnSize - 1){
+                if (row == Configuration.instance.rowAndColumnSize - 1) {
                     if (set != null) {
                         field.vSets.add(set);
                         set = null;
@@ -238,6 +294,11 @@ public class Application {
         }
     }
 
+    /**
+     * Generates the puzzle.
+     *
+     * @return The puzzle field.
+     */
     private PuzzleField generatePuzzle() {
         List<Cell> cells = this.generateConstraintAndBlockCells();
         PuzzleField field = new PuzzleField();
@@ -249,10 +310,16 @@ public class Application {
         return field;
     }
 
+    /**
+     * Generates all missing value cells.
+     *
+     * @param field The field to generate the cells on.
+     * @return A list of generated cells.
+     */
     private Collection<? extends Cell> generateMissingValueCells(PuzzleField field) {
         List<Cell> setableCells = new ArrayList<>();
         for (int row = 0; row < Configuration.instance.rowAndColumnSize; row++) {
-            for (int column = 0; column < Configuration.instance.rowAndColumnSize; column++){
+            for (int column = 0; column < Configuration.instance.rowAndColumnSize; column++) {
                 Cell cell = field.getFieldCell(row, column);
                 if (cell == null) {
                     setableCells.add(new SetableCell(column, row));
@@ -262,13 +329,18 @@ public class Application {
         return setableCells;
     }
 
+    /**
+     * Generates all constraint and blocking cells.
+     *
+     * @return A list of the generated cells.
+     */
     private List<Cell> generateConstraintAndBlockCells() {
         List<Cell> cells = new ArrayList<>(Configuration.instance.rowAndColumnSize * Configuration.instance.rowAndColumnSize);
 
         // row 0:
         int row = 0;
-        cells.add(new BlockingCell(0,row));
-        cells.add(new BlockingCell(1,row));
+        cells.add(new BlockingCell(0, row));
+        cells.add(new BlockingCell(1, row));
         cells.add(new SingleConstraintCell(2, row, Orientation.VERTICAL, 19));
         cells.add(new SingleConstraintCell(3, row, Orientation.VERTICAL, 12));
         cells.add(new BlockingCell(4, row));
@@ -287,7 +359,7 @@ public class Application {
 
         // row 2:
         row = 2;
-        cells.add(new BlockingCell(0,row));
+        cells.add(new BlockingCell(0, row));
         cells.add(new DoubleConstraintCell(1, row, 36, 7));
 
         // row 3:
