@@ -34,7 +34,7 @@ public class HelpersTest {
                 new SingleConstraintCell(5, 5, Orientation.HORIZONTAL, 5);
         assertTrue("Cell should be a horizontal constraint",
                 Helpers.isConstraintCellForOrientation(horizontalConstraint, Orientation.HORIZONTAL));
-        assertFalse("Cell should not be a vertival constraint",
+        assertFalse("Cell should not be a vertical constraint",
                 Helpers.isConstraintCellForOrientation(horizontalConstraint, Orientation.VERTICAL));
     }
 

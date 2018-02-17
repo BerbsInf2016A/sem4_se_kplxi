@@ -9,5 +9,5 @@ public interface ICellValueChangedListener {
      *
      * @param cell The cell, which value is changed.
      */
-    void cellValueChanged(SetableCell cell);
+    void cellValueChanged(SettableCell cell);
 }

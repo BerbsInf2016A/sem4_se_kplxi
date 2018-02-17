@@ -9,7 +9,7 @@ public enum Configuration {
     /**
      * The row and column size of the play field.
      */
-    public int rowAndColumnSize = 9;
+    public final int rowAndColumnSize = 9;
     /**
      * The simulation step delay.
      */

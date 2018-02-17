@@ -1,22 +1,27 @@
 package kakuro;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
 /**
  * Abstract class for a set of cells.
  */
-public abstract class CellSet {
+abstract class CellSet {
 
     /**
      * The maximum value of the set.
      */
-    protected int maxValue;
+    final int maxValue;
     /**
      * The orientation of the set.
      */
-    protected Orientation orientation;
+    private final Orientation orientation;
+    /**
+     * The cells of the set.
+     */
+    private final List<SettableCell> cells;
     /**
      * The possible combinations of the set.
      */
@@ -25,10 +30,6 @@ public abstract class CellSet {
      * The currently used combination.
      */
     private List<Integer> currentlyUsedCombination;
-    /**
-     * The cells of the set.
-     */
-    private List<SetableCell> cells;
 
     /**
      * Constructor for a cell set.
@@ -36,7 +37,7 @@ public abstract class CellSet {
      * @param orientation The orientation of the set.
      * @param maxValue    The maximum value of the set.
      */
-    public CellSet(Orientation orientation, int maxValue) {
+    CellSet(Orientation orientation, int maxValue) {
         this.orientation = orientation;
         this.maxValue = maxValue;
         this.possibleCombinations = new ArrayList<>();
@@ -84,16 +85,9 @@ public abstract class CellSet {
      *
      * @return The cells of the set.
      */
-    public List<SetableCell> getCells() {
+    public List<SettableCell> getCells() {
         return cells;
     }
-
-    /**
-     * Add a cell to the set.
-     *
-     * @param cell The cell to add.
-     */
-    protected abstract void addCell(SetableCell cell);
 
     /**
      * Updates the metadata of the set, like the possible combinations for the max value.
@@ -108,7 +102,7 @@ public abstract class CellSet {
         for (List<Integer> combination : partitionsWithCorrectLength) {
             int distinctCount = (int) combination.stream().distinct().count();
             if (distinctCount == combination.size()) {
-                if (combination.stream().max(Integer::max).get() <= 9)
+                if (combination.stream().max(Comparator.naturalOrder()).get() <= 9)
                     partitionsWithValidCombinations.add(combination);
             }
         }
@@ -136,16 +130,13 @@ public abstract class CellSet {
      */
     public boolean canBeSet(int possibleCandidate) {
         int sum = 0;
-        for (SetableCell cell : this.cells) {
+        for (SettableCell cell : this.cells) {
             if (cell.getValue().isPresent()) {
                 int value = cell.getValue().getAsInt();
                 if (value == possibleCandidate) return false;
                 sum += value;
             }
         }
-        if (sum + possibleCandidate > this.maxValue) {
-            return false;
-        }
-        return true;
+        return sum + possibleCandidate <= this.maxValue;
     }
 }

@@ -8,11 +8,11 @@ public abstract class Cell {
     /**
      * The column of the cell
      */
-    int column;
+    final int column;
     /**
      * The row of the cell.
      */
-    int row;
+    final int row;
 
     /**
      * Constructor for the cell class.
@@ -20,7 +20,7 @@ public abstract class Cell {
      * @param column The index of the column.
      * @param row    The index of the row.
      */
-    public Cell(int column, int row) {
+    Cell(int column, int row) {
         this.column = column;
         this.row = row;
     }

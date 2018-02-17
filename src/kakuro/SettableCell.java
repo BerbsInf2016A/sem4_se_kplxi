@@ -5,36 +5,33 @@ import java.util.List;
 import java.util.OptionalInt;
 
 /**
- * A SetableCell is a cell, which value can be set.
+ * A SettableCell is a cell, which value can be set.
  */
-public class SetableCell extends Cell {
+public class SettableCell extends Cell {
+    /**
+     * A list of listeners, which are interested in the event of an changed value.
+     */
+    private final List<ICellValueChangedListener> listeners;
     /**
      * The value of the cell.
      */
     private OptionalInt value;
-
     /**
      * The horizontal set of the cell.
      */
     private HorizontalCellSet hSet;
-
     /**
      * The vertical set of the cell.
      */
     private VerticalCellSet vSet;
 
     /**
-     * A list of listeners, which are interested in the event of an changed value.
-     */
-    private List<ICellValueChangedListener> listeners;
-
-    /**
-     * Constructor for a SetableCell.
+     * Constructor for a SettableCell.
      *
      * @param column The column of the cell.
      * @param row    The row of the cell.
      */
-    public SetableCell(int column, int row) {
+    public SettableCell(int column, int row) {
         super(column, row);
         this.listeners = new ArrayList<>();
         this.value = OptionalInt.empty();
@@ -55,18 +52,16 @@ public class SetableCell extends Cell {
      *
      * @param value The value to set.
      */
-    public void setValue(OptionalInt value) {
-        this.value = value;
+    public void setValue(int value) {
+        this.value = OptionalInt.of(value);
         this.valueChanged();
     }
 
     /**
-     * Set the value of the cell.
-     *
-     * @param value The value to set.
+     * Reset the value of the cell.
      */
-    public void setValue(int value) {
-        this.value = OptionalInt.of(value);
+    public void resetValue() {
+        this.value = OptionalInt.empty();
         this.valueChanged();
     }
 

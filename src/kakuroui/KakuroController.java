@@ -11,36 +11,32 @@ import kakuro.KakuroSolver;
 /**
  * A controller for the kakuro ui.
  */
-public class KakuroController {
-
-    /**
-     * The thread to run the solver algorithm on.
-     */
-    private final Thread solverThread;
+class KakuroController {
 
     /**
      * EventHandler for the start button.
      */
-    public EventHandler<ActionEvent> startButtonEventHandler;
-
+    public final EventHandler<ActionEvent> startButtonEventHandler;
     /**
      * EventHandler for the exit button.
      */
-    public EventHandler<ActionEvent> exitButtonEventHandler;
+    public final EventHandler<ActionEvent> exitButtonEventHandler;
     /**
      * EventHandler for the window closed event.
      */
-    public EventHandler<WindowEvent> windowIsClosedEventHandler;
-
+    public final EventHandler<WindowEvent> windowIsClosedEventHandler;
     /**
      * EventHandler for the change of the slider.
      */
-    public ChangeListener<? super Number> sliderChangeListener;
-
+    public final ChangeListener<? super Number> sliderChangeListener;
+    /**
+     * The thread to run the solver algorithm on.
+     */
+    private final Thread solverThread;
     /**
      * Property to bind the start button disabled property to.
      */
-    private SimpleBooleanProperty canStart = new SimpleBooleanProperty(this, "canStart");
+    private final SimpleBooleanProperty canStart = new SimpleBooleanProperty(this, "canStart");
 
     /**
      * Constructor for the controller.
@@ -49,11 +45,7 @@ public class KakuroController {
      */
     public KakuroController(KakuroSolver kakuroSolver) {
 
-        this.solverThread = new Thread() {
-            public void run() {
-                kakuroSolver.solveField();
-            }
-        };
+        this.solverThread = new Thread(kakuroSolver::solveField);
 
         this.startButtonEventHandler =
                 event -> this.startSolvingThread();
@@ -73,7 +65,7 @@ public class KakuroController {
     /**
      * Get the property to bind the start button disabled property to.
      *
-     * @return
+     * @return The property to bind to.
      */
     public SimpleBooleanProperty canStartProperty() {
         return canStart;
@@ -82,7 +74,7 @@ public class KakuroController {
     /**
      * Ends the execution.
      */
-    public void close() {
+    private void close() {
         this.stopSolvingThread();
         System.exit(0);
     }

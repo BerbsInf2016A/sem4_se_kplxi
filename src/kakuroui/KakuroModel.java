@@ -1,7 +1,7 @@
 package kakuroui;
 
 import kakuro.Cell;
-import kakuro.SetableCell;
+import kakuro.SettableCell;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,11 +9,11 @@ import java.util.List;
 /**
  * A model for the kakuro ui.
  */
-public class KakuroModel {
+class KakuroModel {
     /**
-     * A list of all setable cell models to bind the ui to.
+     * A list of all settable cell models to bind the ui to.
      */
-    private final List<SetableCellModel> setableCellModels;
+    private final List<SettableCellModel> settableCellModels;
 
     /**
      * All cells of the playing field.
@@ -27,18 +27,18 @@ public class KakuroModel {
      */
     public KakuroModel(List<Cell> rawCells) {
         this.rawCells = rawCells;
-        this.setableCellModels = new ArrayList<>();
-        this.rawCells.stream().filter(cell -> cell instanceof SetableCell)
-                .forEach(cell -> this.setableCellModels.add(new SetableCellModel((SetableCell) cell)));
+        this.settableCellModels = new ArrayList<>();
+        this.rawCells.stream().filter(cell -> cell instanceof SettableCell)
+                .forEach(cell -> this.settableCellModels.add(new SettableCellModel((SettableCell) cell)));
     }
 
     /**
-     * Get a list of all setable cell models.
+     * Get a list of all settable cell models.
      *
-     * @return A list of all setable cell models.
+     * @return A list of all settable cell models.
      */
-    public List<SetableCellModel> getSetableCellModels() {
-        return setableCellModels;
+    public List<SettableCellModel> getSettableCellModels() {
+        return settableCellModels;
     }
 
     /**

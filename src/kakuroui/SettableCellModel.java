@@ -3,12 +3,12 @@ package kakuroui;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import kakuro.ICellValueChangedListener;
-import kakuro.SetableCell;
+import kakuro.SettableCell;
 
 /**
- * A model of a setable cell to bind the ui to.
+ * A model of a settable cell to bind the ui to.
  */
-public class SetableCellModel implements ICellValueChangedListener {
+public class SettableCellModel implements ICellValueChangedListener {
     /**
      * The row of the model.
      */
@@ -22,9 +22,9 @@ public class SetableCellModel implements ICellValueChangedListener {
     /**
      * A property to bind the ui to. Representing the value of the cell.
      */
-    private SimpleStringProperty value = new SimpleStringProperty(this, "value");
+    private final SimpleStringProperty value = new SimpleStringProperty(this, "value");
 
-    public SetableCellModel(SetableCell cell) {
+    public SettableCellModel(SettableCell cell) {
         cell.addValueChangedListener(this);
         this.row = cell.getRow();
         this.column = cell.getColumn();
@@ -64,7 +64,7 @@ public class SetableCellModel implements ICellValueChangedListener {
      * @param cell The cell, which value is changed.
      */
     @Override
-    public void cellValueChanged(SetableCell cell) {
+    public void cellValueChanged(SettableCell cell) {
         String cellValue = cell.getUIValue();
         // Update the ui on the ui thread:
         Platform.runLater(new UpdateUIModelTask(this, cellValue));

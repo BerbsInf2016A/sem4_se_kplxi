@@ -3,7 +3,7 @@ package kakuro;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Helpers {
+class Helpers {
     /**
      * Get the maximum value from a constraint cell.
      *
@@ -47,10 +47,7 @@ public class Helpers {
             }
         }
 
-        if (cell instanceof DoubleConstraintCell) {
-            return true;
-        }
-        return false;
+        return cell instanceof DoubleConstraintCell;
     }
 
     /**

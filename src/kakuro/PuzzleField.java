@@ -9,19 +9,17 @@ import java.util.Optional;
  */
 public class PuzzleField {
     /**
-     * The cells of the field.
-     */
-    List<Cell> cells;
-
-    /**
      * The horizontal sets of the field.
      */
-    List<HorizontalCellSet> hSets;
-
+    final List<HorizontalCellSet> hSets;
     /**
      * The vertical sets of the field.
      */
-    List<VerticalCellSet> vSets;
+    final List<VerticalCellSet> vSets;
+    /**
+     * The cells of the field.
+     */
+    List<Cell> cells;
 
     /**
      * Constructor for the puzzle field.
@@ -53,8 +51,7 @@ public class PuzzleField {
             throw new RuntimeException("Invalid row column combination. row: " + row + " column: " + column);
         }
         Optional<Cell> cell = this.cells.stream().filter(c -> c.column == column && c.row == row).findFirst();
-        if (cell.isPresent()) return cell.get();
-        return null;
+        return cell.orElse(null);
     }
 
     /**
@@ -65,8 +62,9 @@ public class PuzzleField {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        String seperator = System.getProperty("line.separator");
-        this.cells.forEach(c -> sb.append(c.column + "|" + c.row + ": Type: " + c.getClass() + seperator));
+        String separator = System.getProperty("line.separator");
+        this.cells.forEach(c -> sb.append(c.column).append("|").append(c.row).append(": Type: ")
+                .append(c.getClass()).append(separator));
         return sb.toString();
     }
 
@@ -88,16 +86,15 @@ public class PuzzleField {
      * @param cell The current cell.
      * @return The next empty cell.
      */
-    public SetableCell getNextEmptyCell(SetableCell cell) {
+    public SettableCell getNextEmptyCell(SettableCell cell) {
         int columnOffset = cell.column;
         for (int row = cell.row; row < Configuration.instance.rowAndColumnSize; row++) {
             for (int column = columnOffset; column < Configuration.instance.rowAndColumnSize; column++) {
                 Cell nextCell = this.getFieldCell(row, column);
                 if (nextCell == cell) continue;
-                if (nextCell instanceof SetableCell) {
-                    SetableCell setableCell = (SetableCell) nextCell;
-                    if (!setableCell.getValue().isPresent()) return setableCell;
-                    continue;
+                if (nextCell instanceof SettableCell) {
+                    SettableCell settableCell = (SettableCell) nextCell;
+                    if (!settableCell.getValue().isPresent()) return settableCell;
                 }
             }
             columnOffset = 0;
@@ -113,7 +110,7 @@ public class PuzzleField {
     public boolean validateCellValues() {
         for (HorizontalCellSet set : this.hSets) {
             int setSum = 0;
-            for (SetableCell cell : set.getCells()) {
+            for (SettableCell cell : set.getCells()) {
                 if (cell.getValue().isPresent()) {
                     setSum += cell.getValue().getAsInt();
                 } else {
@@ -124,7 +121,7 @@ public class PuzzleField {
         }
         for (VerticalCellSet set : this.vSets) {
             int setSum = 0;
-            for (SetableCell cell : set.getCells()) {
+            for (SettableCell cell : set.getCells()) {
                 if (cell.getValue().isPresent()) {
                     setSum += cell.getValue().getAsInt();
                 } else {

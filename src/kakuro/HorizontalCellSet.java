@@ -18,8 +18,7 @@ public class HorizontalCellSet extends CellSet {
      *
      * @param cell The cell to add.
      */
-    @Override
-    protected void addCell(SetableCell cell) {
+    void addCell(SettableCell cell) {
         this.getCells().add(cell);
         cell.setHorizontalSet(this);
     }

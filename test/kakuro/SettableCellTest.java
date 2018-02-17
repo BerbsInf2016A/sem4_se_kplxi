@@ -6,7 +6,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class SetableCellTest {
+public class SettableCellTest {
     @Before
     public void before() {
         Configuration.instance.printDebugMessages = false;
@@ -16,7 +16,7 @@ public class SetableCellTest {
     @Test
     public void addValueChangedListener() {
         MockChangedListener listener = new MockChangedListener();
-        SetableCell testCell = new SetableCell(1, 1);
+        SettableCell testCell = new SettableCell(1, 1);
         testCell.addValueChangedListener(listener);
 
         testCell.setValue(4);
@@ -27,21 +27,21 @@ public class SetableCellTest {
     }
 
     @Test
-    public void SetableCell_toString() {
-        SetableCell emptyCell = new SetableCell(1, 1);
+    public void SettableCell_toString() {
+        SettableCell emptyCell = new SettableCell(1, 1);
         assertEquals("Row: 1 Column: 1 Value: null", emptyCell.toString());
 
-        SetableCell cellWithValue = new SetableCell(1, 1);
+        SettableCell cellWithValue = new SettableCell(1, 1);
         cellWithValue.setValue(4);
         assertEquals("Row: 1 Column: 1 Value: 4", cellWithValue.toString());
     }
 
     @Test
-    public void SetableCell_getUIValue() {
-        SetableCell emptyCell = new SetableCell(1, 1);
+    public void SettableCell_getUIValue() {
+        SettableCell emptyCell = new SettableCell(1, 1);
         assertEquals("-", emptyCell.getUIValue());
 
-        SetableCell cellWithValue = new SetableCell(1, 1);
+        SettableCell cellWithValue = new SettableCell(1, 1);
         cellWithValue.setValue(4);
         assertEquals("4", cellWithValue.getUIValue());
     }

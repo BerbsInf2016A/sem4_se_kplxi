@@ -2,8 +2,6 @@ package kakuro;
 
 import org.junit.Test;
 
-import java.util.OptionalInt;
-
 import static org.junit.Assert.assertEquals;
 
 public class PuzzleFieldTest {
@@ -20,18 +18,18 @@ public class PuzzleFieldTest {
     }
 
     @Test
-    public void getNextExmptyCell() {
-        SetableCell cellWithValue = new SetableCell(1, 1);
-        cellWithValue.setValue(OptionalInt.of(4));
+    public void getNextEmptyCell() {
+        SettableCell cellWithValue = new SettableCell(1, 1);
+        cellWithValue.setValue(4);
         SingleConstraintCell blockCell = new SingleConstraintCell(2, 1, Orientation.VERTICAL, 6);
-        SetableCell cellWithOutValue = new SetableCell(3, 1);
+        SettableCell cellWithOutValue = new SettableCell(3, 1);
         PuzzleField field = new PuzzleField();
         field.getCells().add(cellWithValue);
         field.getCells().add(blockCell);
         field.getCells().add(cellWithOutValue);
 
-        // The next cell which can store a value is the empty SetableCell. The blocking cell should be skipped.
-        assertEquals("The empty SetableCell should be returned", cellWithOutValue, field.getNextEmptyCell(cellWithValue));
+        // The next cell which can store a value is the empty SettableCell. The blocking cell should be skipped.
+        assertEquals("The empty SettableCell should be returned", cellWithOutValue, field.getNextEmptyCell(cellWithValue));
     }
 
 }

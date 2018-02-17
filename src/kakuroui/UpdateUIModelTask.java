@@ -3,17 +3,17 @@ package kakuroui;
 /**
  * A task to update the ui.
  */
-public class UpdateUIModelTask implements Runnable {
+class UpdateUIModelTask implements Runnable {
 
     /**
      * The model of the cell.
      */
-    SetableCellModel model;
+    private final SettableCellModel model;
 
     /**
      * The value of the cell.
      */
-    String value;
+    private final String value;
 
     /**
      * Constructor for the UpdateUIModelTask.
@@ -21,7 +21,7 @@ public class UpdateUIModelTask implements Runnable {
      * @param model The model to update.
      * @param value The new value of the model.
      */
-    public UpdateUIModelTask(SetableCellModel model, String value) {
+    public UpdateUIModelTask(SettableCellModel model, String value) {
         this.model = model;
         this.value = value;
     }

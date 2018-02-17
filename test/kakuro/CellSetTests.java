@@ -22,7 +22,7 @@ public class CellSetTests {
 
     @Test
     public void horizontalSet_addCell() {
-        SetableCell cell = new SetableCell(0, 0);
+        SettableCell cell = new SettableCell(0, 0);
 
         HorizontalCellSet cellSet = new HorizontalCellSet(5);
         cellSet.addCell(cell);
@@ -34,7 +34,7 @@ public class CellSetTests {
 
     @Test
     public void verticalSet_addCell() {
-        SetableCell cell = new SetableCell(1, 1);
+        SettableCell cell = new SettableCell(1, 1);
 
         VerticalCellSet cellSet = new VerticalCellSet(5);
         cellSet.addCell(cell);
@@ -45,7 +45,7 @@ public class CellSetTests {
 
     @Test
     public void cellSet_addCell_SetsAreSetInTheCell() {
-        SetableCell cell = new SetableCell(1, 1);
+        SettableCell cell = new SettableCell(1, 1);
 
         VerticalCellSet vCellSet = new VerticalCellSet(5);
         vCellSet.addCell(cell);
@@ -64,8 +64,8 @@ public class CellSetTests {
     public void cellSet_UpdateMetadata() {
         VerticalCellSet vCellSet = new VerticalCellSet(5);
 
-        SetableCell firstCell = new SetableCell(1, 1);
-        SetableCell secondCell = new SetableCell(1, 2);
+        SettableCell firstCell = new SettableCell(1, 1);
+        SettableCell secondCell = new SettableCell(1, 2);
         vCellSet.addCell(firstCell);
         vCellSet.addCell(secondCell);
 
@@ -93,9 +93,9 @@ public class CellSetTests {
     public void cellSet_valueCanBeSet_True() {
         VerticalCellSet vCellSet = new VerticalCellSet(5);
 
-        SetableCell firstCell = new SetableCell(1, 1);
+        SettableCell firstCell = new SettableCell(1, 1);
         firstCell.setValue(2);
-        SetableCell secondCell = new SetableCell(1, 2);
+        SettableCell secondCell = new SettableCell(1, 2);
         vCellSet.addCell(firstCell);
         vCellSet.addCell(secondCell);
 
@@ -106,9 +106,9 @@ public class CellSetTests {
     public void cellSet_valueCanBeSet_False() {
         VerticalCellSet vCellSet = new VerticalCellSet(5);
 
-        SetableCell firstCell = new SetableCell(1, 1);
+        SettableCell firstCell = new SettableCell(1, 1);
         firstCell.setValue(2);
-        SetableCell secondCell = new SetableCell(1, 2);
+        SettableCell secondCell = new SettableCell(1, 2);
         vCellSet.addCell(firstCell);
         vCellSet.addCell(secondCell);
 
@@ -119,8 +119,8 @@ public class CellSetTests {
     public void cellSet_setCurrentCombination() {
         VerticalCellSet vCellSet = new VerticalCellSet(5);
 
-        SetableCell firstCell = new SetableCell(1, 1);
-        SetableCell secondCell = new SetableCell(1, 2);
+        SettableCell firstCell = new SettableCell(1, 1);
+        SettableCell secondCell = new SettableCell(1, 2);
         vCellSet.addCell(firstCell);
         vCellSet.addCell(secondCell);
 

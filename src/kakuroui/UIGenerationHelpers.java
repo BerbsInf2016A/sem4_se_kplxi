@@ -18,14 +18,14 @@ import kakuro.SingleConstraintCell;
 /**
  * A class containing helper methods for the creation of ui elements.
  */
-public class UIGenerationHelpers {
+class UIGenerationHelpers {
     /**
      * The default font for the ui elements.
      */
-    private static Font defaultFont = Font.font("Arial", FontWeight.BOLD, 18);
+    private static final Font defaultFont = Font.font("Arial", FontWeight.BOLD, 18);
 
-    private static Insets defaultHorizontalLabelInset = new Insets(0, 6, 20, 0);
-    private static Insets defaultVerticalLabelInset = new Insets(0, 20, 6, 0);
+    private static final Insets defaultHorizontalLabelInset = new Insets(0, 6, 20, 0);
+    private static final Insets defaultVerticalLabelInset = new Insets(0, 20, 6, 0);
 
     /**
      * Generate a slider with default values.
@@ -64,12 +64,12 @@ public class UIGenerationHelpers {
     }
 
     /**
-     * Generate a label for setable cell with default values and bind it to the model.
+     * Generate a label for settable cell with default values and bind it to the model.
      *
      * @param model The model to bind the label to.
      * @return The created label.
      */
-    private static Label generateAndBindDefaultSetableCellTextLabel(SetableCellModel model) {
+    private static Label generateAndBindDefaultSettableCellTextLabel(SettableCellModel model) {
         Label text = new Label();
         text.setFont(new Font("Arial", 24));
         text.textProperty().bind(model.valueProperty());
@@ -83,10 +83,10 @@ public class UIGenerationHelpers {
      * @param rectangle The rectangle for the cell.
      * @param model     The model to bind to.
      */
-    public static void generateAndBindSetableCellRectangle(StackPane stack, Rectangle rectangle, SetableCellModel model) {
-        Label setableCellTextLabel = UIGenerationHelpers.generateAndBindDefaultSetableCellTextLabel(model);
+    public static void generateAndBindSettableCellRectangle(StackPane stack, Rectangle rectangle, SettableCellModel model) {
+        Label settableCellTextLabel = UIGenerationHelpers.generateAndBindDefaultSettableCellTextLabel(model);
         rectangle.setFill(Color.WHITE);
-        stack.getChildren().addAll(rectangle, setableCellTextLabel);
+        stack.getChildren().addAll(rectangle, settableCellTextLabel);
     }
 
     /**
@@ -96,15 +96,15 @@ public class UIGenerationHelpers {
      * @param rectangle The rectangle for the cell.
      */
     public static void generateDefaultConstraintCell(StackPane stack, Rectangle rectangle) {
-        Line diagonale = new Line();
-        stack.getChildren().add(diagonale);
-        diagonale.setStroke(Color.WHITE);
-        diagonale.startXProperty().bind(rectangle.xProperty().subtract(rectangle.widthProperty().divide(2)));
-        diagonale.endXProperty().bind(rectangle.xProperty().add(rectangle.widthProperty().divide(2)));
+        Line diagonal = new Line();
+        stack.getChildren().add(diagonal);
+        diagonal.setStroke(Color.WHITE);
+        diagonal.startXProperty().bind(rectangle.xProperty().subtract(rectangle.widthProperty().divide(2)));
+        diagonal.endXProperty().bind(rectangle.xProperty().add(rectangle.widthProperty().divide(2)));
 
-        diagonale.startYProperty().bind(rectangle.yProperty().subtract(rectangle.heightProperty().divide(2)));
-        diagonale.endYProperty().bind(rectangle.yProperty().add(rectangle.heightProperty().divide(2)));
-        diagonale.setStrokeWidth(1);
+        diagonal.startYProperty().bind(rectangle.yProperty().subtract(rectangle.heightProperty().divide(2)));
+        diagonal.endYProperty().bind(rectangle.yProperty().add(rectangle.heightProperty().divide(2)));
+        diagonal.setStrokeWidth(1);
     }
 
     /**

@@ -7,11 +7,11 @@ import java.util.List;
 /**
  * A class to generate partitions of values.
  */
-public class Partition {
+class Partition {
     /**
      * A cache to save already calculated values.
      */
-    private static HashMap<Integer, List<List<Integer>>> cachedValues = new HashMap<>();
+    private static final HashMap<Integer, List<List<Integer>>> cachedValues = new HashMap<>();
 
     /**
      * Get all partitions for a specified value.

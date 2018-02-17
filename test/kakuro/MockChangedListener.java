@@ -2,19 +2,19 @@ package kakuro;
 
 public class MockChangedListener implements ICellValueChangedListener {
 
-    boolean cellValueHasChanged = false;
-    SetableCell changedCell;
+    private boolean cellValueHasChanged = false;
+    private SettableCell changedCell;
 
     public boolean isCellValueHasChanged() {
         return cellValueHasChanged;
     }
 
-    public SetableCell getChangedCell() {
+    public SettableCell getChangedCell() {
         return changedCell;
     }
 
     @Override
-    public void cellValueChanged(SetableCell cell) {
+    public void cellValueChanged(SettableCell cell) {
         this.cellValueHasChanged = true;
         this.changedCell = cell;
     }

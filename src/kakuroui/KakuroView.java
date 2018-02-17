@@ -23,12 +23,7 @@ import java.util.Optional;
 /**
  * A view for the kakuro solving algorithm
  */
-public class KakuroView {
-
-    /**
-     * The size of the playing field.
-     */
-    final int playFieldSize = Configuration.instance.rowAndColumnSize;
+class KakuroView {
 
     /**
      * The controller for the view.
@@ -38,7 +33,7 @@ public class KakuroView {
     /**
      * The model for the view.
      */
-    private KakuroModel model;
+    private final KakuroModel model;
 
 
     /**
@@ -80,6 +75,7 @@ public class KakuroView {
      * @param root The root element to add the ui elements to.
      */
     private int addCellRectanglesToThePane(GridPane root, int rowOffset) {
+        int playFieldSize = Configuration.instance.rowAndColumnSize;
         for (int row = 0; row < playFieldSize; row++) {
             for (int col = 0; col < playFieldSize; col++) {
 
@@ -109,24 +105,22 @@ public class KakuroView {
             throw new RuntimeException("Invalid row column combination. row: " + row + " column: " + column);
         }
         Optional<Cell> cell = this.model.getRawCells().stream().filter(c -> c.getColumn() == column && c.getRow() == row).findFirst();
-        if (cell.isPresent()) return cell.get();
-        return null;
+        return cell.orElse(null);
     }
 
     /**
-     * Gets the setable cell for the specified position.
+     * Gets the settable cell for the specified position.
      *
      * @param row    The row position.
      * @param column The column position.
      * @return The cell at the position.
      */
-    private SetableCellModel getModelCell(int row, int column) {
+    private SettableCellModel getModelCell(int row, int column) {
         if (row > Configuration.instance.rowAndColumnSize || column > Configuration.instance.rowAndColumnSize || row < 0 || column < 0) {
             throw new RuntimeException("Invalid row column combination. row: " + row + " column: " + column);
         }
-        Optional<SetableCellModel> cell = this.model.getSetableCellModels().stream().filter(c -> c.getColumn() == column && c.getRow() == row).findFirst();
-        if (cell.isPresent()) return cell.get();
-        return null;
+        Optional<SettableCellModel> cell = this.model.getSettableCellModels().stream().filter(c -> c.getColumn() == column && c.getRow() == row).findFirst();
+        return cell.orElse(null);
     }
 
     /**
@@ -157,8 +151,8 @@ public class KakuroView {
             }
 
         } else {
-            SetableCellModel model = this.getModelCell(row, col);
-            UIGenerationHelpers.generateAndBindSetableCellRectangle(stack, rectangle, model);
+            SettableCellModel model = this.getModelCell(row, col);
+            UIGenerationHelpers.generateAndBindSettableCellRectangle(stack, rectangle, model);
         }
         return stack;
     }

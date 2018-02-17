@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
-import java.util.OptionalInt;
 import java.util.stream.Collectors;
 
 /**
@@ -58,9 +57,8 @@ public class KakuroSolver {
      */
     private boolean solve(PuzzleField field) {
         for (Cell rawCell : field.cells) {
-            if (rawCell instanceof SetableCell) {
-                SetableCell cell = (SetableCell) rawCell;
-                return solveForCell((SetableCell) field.getFieldCell(1, 2), field);
+            if (rawCell instanceof SettableCell) {
+                return solveForCell((SettableCell) field.getFieldCell(1, 2), field);
             }
         }
         return false;
@@ -76,23 +74,22 @@ public class KakuroSolver {
      * @param field         The play field.
      * @return True if the field is solved, false if not.
      */
-    private boolean tryInterSections(List<Integer> intersections, SetableCell cell, HorizontalCellSet hSet, VerticalCellSet vSet, PuzzleField field) {
+    private boolean tryInterSections(List<Integer> intersections, SettableCell cell, HorizontalCellSet hSet, VerticalCellSet vSet, PuzzleField field) {
         for (int possibleCandidate : intersections) {
             if (hSet.canBeSet(possibleCandidate) && vSet.canBeSet(possibleCandidate)) {
                 cell.setValue(possibleCandidate);
-                SetableCell nextCell = field.getNextEmptyCell(cell);
+                SettableCell nextCell = field.getNextEmptyCell(cell);
                 if (nextCell == null) {
                     return field.validateCellValues();
                 }
                 if (!solveForCell(nextCell, field)) {
-                    cell.setValue(OptionalInt.empty());
-                    continue;
+                    cell.resetValue();
                 } else {
                     return true;
                 }
             }
         }
-        cell.setValue(OptionalInt.empty());
+        cell.resetValue();
         return false;
     }
 
@@ -103,7 +100,7 @@ public class KakuroSolver {
      * @param field The current playing field.
      * @return True if solved, false if not.
      */
-    private boolean solveForCell(SetableCell cell, PuzzleField field) {
+    private boolean solveForCell(SettableCell cell, PuzzleField field) {
         try {
             Thread.sleep(Configuration.instance.stepDelayInMilliseconds);
 
@@ -137,7 +134,6 @@ public class KakuroSolver {
                         if (!tryInterSections(intersections, cell, hSet, vSet, field)) {
                             hSet.resetCurrentlyUsedCombination();
                             vSet.resetCurrentlyUsedCombination();
-                            continue;
                         } else {
                             return true;
                         }
@@ -155,7 +151,6 @@ public class KakuroSolver {
 
                     if (!tryInterSections(intersections, cell, hSet, vSet, field)) {
                         vSet.resetCurrentlyUsedCombination();
-                        continue;
                     } else {
                         return true;
                     }
@@ -172,7 +167,6 @@ public class KakuroSolver {
 
                     if (!tryInterSections(intersections, cell, hSet, vSet, field)) {
                         hSet.resetCurrentlyUsedCombination();
-                        continue;
                     } else {
                         return true;
                     }
@@ -180,7 +174,7 @@ public class KakuroSolver {
             }
         }
 
-        cell.setValue(OptionalInt.empty());
+        cell.resetValue();
         return false;
     }
 
@@ -202,15 +196,13 @@ public class KakuroSolver {
                     continue;
                 }
                 // End of horizontal set, start of a new one
-                if (cell instanceof ConstraintCell && set != null) {
-                    if (set != null) {
-                        field.hSets.add(set);
-                        set = null;
-                        if (Helpers.isConstraintCellForOrientation(cell, Orientation.HORIZONTAL)) {
-                            set = new HorizontalCellSet(Helpers.getMaxValueFromConstraintCells(cell, Orientation.HORIZONTAL));
-                        }
-                        continue;
+                if (cell instanceof ConstraintCell) {
+                    field.hSets.add(set);
+                    set = null;
+                    if (Helpers.isConstraintCellForOrientation(cell, Orientation.HORIZONTAL)) {
+                        set = new HorizontalCellSet(Helpers.getMaxValueFromConstraintCells(cell, Orientation.HORIZONTAL));
                     }
+                    continue;
                 }
                 // End of horizontal set
                 if (cell instanceof BlockingCell) {
@@ -222,8 +214,10 @@ public class KakuroSolver {
                     continue;
                 }
                 // Cell part of the sets
-                if (cell instanceof SetableCell) {
-                    set.addCell((SetableCell) cell);
+                if (cell instanceof SettableCell) {
+                    if (set != null) {
+                        set.addCell((SettableCell) cell);
+                    }
                 }
 
                 if (column == Configuration.instance.rowAndColumnSize - 1) {
@@ -254,15 +248,13 @@ public class KakuroSolver {
                     continue;
                 }
                 // End of horizontal set, start of a new one
-                if (cell instanceof ConstraintCell && set != null) {
-                    if (set != null) {
-                        field.vSets.add(set);
-                        set = null;
-                        if (Helpers.isConstraintCellForOrientation(cell, Orientation.VERTICAL)) {
-                            set = new VerticalCellSet(Helpers.getMaxValueFromConstraintCells(cell, Orientation.VERTICAL));
-                        }
-                        continue;
+                if (cell instanceof ConstraintCell) {
+                    field.vSets.add(set);
+                    set = null;
+                    if (Helpers.isConstraintCellForOrientation(cell, Orientation.VERTICAL)) {
+                        set = new VerticalCellSet(Helpers.getMaxValueFromConstraintCells(cell, Orientation.VERTICAL));
                     }
+                    continue;
                 }
                 // End of horizontal set
                 if (cell instanceof BlockingCell) {
@@ -274,8 +266,10 @@ public class KakuroSolver {
                     continue;
                 }
                 // Cell part of the sets
-                if (cell instanceof SetableCell) {
-                    set.addCell((SetableCell) cell);
+                if (cell instanceof SettableCell) {
+                    if (set != null) {
+                        set.addCell((SettableCell) cell);
+                    }
                 }
 
                 if (row == Configuration.instance.rowAndColumnSize - 1) {
@@ -311,16 +305,16 @@ public class KakuroSolver {
      * @return A list of generated cells.
      */
     private Collection<? extends Cell> generateMissingValueCells(PuzzleField field) {
-        List<Cell> setableCells = new ArrayList<>();
+        List<Cell> settableCells = new ArrayList<>();
         for (int row = 0; row < Configuration.instance.rowAndColumnSize; row++) {
             for (int column = 0; column < Configuration.instance.rowAndColumnSize; column++) {
                 Cell cell = field.getFieldCell(row, column);
                 if (cell == null) {
-                    setableCells.add(new SetableCell(column, row));
+                    settableCells.add(new SettableCell(column, row));
                 }
             }
         }
-        return setableCells;
+        return settableCells;
     }
 
     /**

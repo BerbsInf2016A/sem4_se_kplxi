@@ -11,7 +11,7 @@ public abstract class ConstraintCell extends Cell {
      * @param xPos Index of the column.
      * @param yPos Index of the row.
      */
-    public ConstraintCell(int xPos, int yPos) {
+    ConstraintCell(int xPos, int yPos) {
         super(xPos, yPos);
     }
 }
