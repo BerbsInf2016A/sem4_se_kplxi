@@ -10,6 +10,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import kakuro.Configuration;
 import kakuro.DoubleConstraintCell;
 import kakuro.SingleConstraintCell;
@@ -18,6 +19,14 @@ import kakuro.SingleConstraintCell;
  * A class containing helper methods for the creation of ui elements.
  */
 public class UIGenerationHelpers {
+    /**
+     * The default font for the ui elements.
+     */
+    private static Font defaultFont = Font.font("Arial", FontWeight.BOLD, 18);
+
+    private static Insets defaultHorizontalLabelInset = new Insets(0,6,20,0);
+    private static Insets defaultVerticalLabelInset = new Insets(0,20,6,0);
+
     /**
      * Generate a slider with default values.
      *
@@ -33,7 +42,7 @@ public class UIGenerationHelpers {
         slider.setShowTickMarks(true);
         slider.setMajorTickUnit(50);
         slider.setMinorTickCount(5);
-        slider.setBlockIncrement(100);
+        slider.setBlockIncrement(1000);
         slider.setMaxWidth(Double.MAX_VALUE);
         slider.setMaxHeight(Double.MAX_VALUE);
 
@@ -62,7 +71,7 @@ public class UIGenerationHelpers {
      */
     private static Label generateAndBindDefaultSetableCellTextLabel(SetableCellModel model) {
         Label text = new Label();
-        text.setFont(new Font("Arial", 30));
+        text.setFont(new Font("Arial", 24));
         text.textProperty().bind(model.valueProperty());
         return text;
     }
@@ -108,9 +117,9 @@ public class UIGenerationHelpers {
         switch (cell.getOrientation()) {
             case VERTICAL:
                 Label vLimit = new Label(String.valueOf(cell.getMaxValue()));
-                vLimit.setFont(new Font("Arial", 15));
+                vLimit.setFont(defaultFont);
                 vLimit.setAlignment(Pos.BOTTOM_CENTER);
-                vLimit.paddingProperty().setValue(new Insets(3, 3, 3, 3));
+                vLimit.paddingProperty().setValue(defaultVerticalLabelInset);
                 stack.setAlignment(vLimit, Pos.BOTTOM_CENTER);
                 vLimit.setTextFill(Color.WHITE);
                 stack.getChildren().add(vLimit);
@@ -118,8 +127,8 @@ public class UIGenerationHelpers {
             case HORIZONTAL:
                 Label hLimit = new Label(String.valueOf(cell.getMaxValue()));
                 hLimit.setAlignment(Pos.CENTER_RIGHT);
-                hLimit.paddingProperty().setValue(new Insets(3, 3, 3, 3));
-                hLimit.setFont(new Font("Arial", 15));
+                hLimit.paddingProperty().setValue(defaultHorizontalLabelInset);
+                hLimit.setFont(defaultFont);
                 stack.setAlignment(hLimit, Pos.CENTER_RIGHT);
                 hLimit.setTextFill(Color.WHITE);
                 stack.getChildren().add(hLimit);
@@ -136,9 +145,8 @@ public class UIGenerationHelpers {
     public static void generateDefaultDoubleConstraintCell(StackPane stack, DoubleConstraintCell cell) {
         Label vLimit = new Label(String.valueOf(cell.getVerticalMax()));
 
-        vLimit.setFont(new Font("Arial", 15));
-        vLimit.paddingProperty().setValue(new Insets(3, 3, 3, 3));
-        vLimit.paddingProperty().setValue(new Insets(3, 3, 3, 3));
+        vLimit.setFont(defaultFont);
+        vLimit.paddingProperty().setValue(defaultVerticalLabelInset);
         vLimit.setAlignment(Pos.BOTTOM_CENTER);
         stack.setAlignment(vLimit, Pos.BOTTOM_CENTER);
         vLimit.setTextFill(Color.WHITE);
@@ -146,8 +154,8 @@ public class UIGenerationHelpers {
 
         Label hLimit = new Label(String.valueOf(cell.getHorizontalMax()));
 
-        hLimit.paddingProperty().setValue(new Insets(3, 3, 3, 3));
-        hLimit.setFont(new Font("Arial", 15));
+        hLimit.paddingProperty().setValue(defaultHorizontalLabelInset);
+        hLimit.setFont(defaultFont);
         hLimit.setAlignment(Pos.CENTER_RIGHT);
         stack.setAlignment(hLimit, Pos.CENTER_RIGHT);
         hLimit.setTextFill(Color.WHITE);
