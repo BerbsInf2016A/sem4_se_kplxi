@@ -17,10 +17,10 @@ public class DoubleConstraintCell extends ConstraintCell {
     /**
      * Constructor for the a double constraint cell.
      *
-     * @param column Index for the column.
-     * @param row Index for the row.
+     * @param column        Index for the column.
+     * @param row           Index for the row.
      * @param horizontalMax The max value for the horizontal constraint.
-     * @param verticalMax The max value for the vertical constraint.
+     * @param verticalMax   The max value for the vertical constraint.
      */
     public DoubleConstraintCell(int column, int row, int horizontalMax, int verticalMax) {
         super(column, row);

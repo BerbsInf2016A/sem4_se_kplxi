@@ -70,10 +70,10 @@ public class KakuroSolver {
      * Tries every candidate for a cell in the specified intersection.
      *
      * @param intersections The possible values of the intersection of set combinations.
-     * @param cell The cell to add the value to.
-     * @param hSet The horizontal set of the cell.
-     * @param vSet The vertical set of the cell.
-     * @param field The play field.
+     * @param cell          The cell to add the value to.
+     * @param hSet          The horizontal set of the cell.
+     * @param vSet          The vertical set of the cell.
+     * @param field         The play field.
      * @return True if the field is solved, false if not.
      */
     private boolean tryInterSections(List<Integer> intersections, SetableCell cell, HorizontalCellSet hSet, VerticalCellSet vSet, PuzzleField field) {
@@ -82,10 +82,7 @@ public class KakuroSolver {
                 cell.setValue(possibleCandidate);
                 SetableCell nextCell = field.getNextEmptyCell(cell);
                 if (nextCell == null) {
-                    if (field.validateCellValues()) {
-                        return true;
-                    }
-                    return false;
+                    return field.validateCellValues();
                 }
                 if (!solveForCell(nextCell, field)) {
                     cell.setValue(OptionalInt.empty());
@@ -102,7 +99,7 @@ public class KakuroSolver {
     /**
      * Tries to solve the puzzle for a specified cell.
      *
-     * @param cell The cell to solve.
+     * @param cell  The cell to solve.
      * @param field The current playing field.
      * @return True if solved, false if not.
      */
@@ -125,11 +122,7 @@ public class KakuroSolver {
         // Both sets have a combination set.
         if (hSet.getCurrentlyUsedCombination() != null && vSet.getCurrentlyUsedCombination() != null) {
             List<Integer> intersections = Helpers.intersect(vSet.getCurrentlyUsedCombination(), hSet.getCurrentlyUsedCombination());
-            if (!tryInterSections(intersections, cell, hSet, vSet, field)) {
-                return false;
-            } else {
-                return true;
-            }
+            return tryInterSections(intersections, cell, hSet, vSet, field);
         }
 
         // No set has a combination set.
@@ -245,6 +238,7 @@ public class KakuroSolver {
 
     /**
      * Generates the vertical sets.
+     *
      * @param field The playing field to generate the sets on.
      */
     private void generateVerticalSets(PuzzleField field) {

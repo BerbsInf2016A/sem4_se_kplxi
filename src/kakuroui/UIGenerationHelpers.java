@@ -24,8 +24,8 @@ public class UIGenerationHelpers {
      */
     private static Font defaultFont = Font.font("Arial", FontWeight.BOLD, 18);
 
-    private static Insets defaultHorizontalLabelInset = new Insets(0,6,20,0);
-    private static Insets defaultVerticalLabelInset = new Insets(0,20,6,0);
+    private static Insets defaultHorizontalLabelInset = new Insets(0, 6, 20, 0);
+    private static Insets defaultVerticalLabelInset = new Insets(0, 20, 6, 0);
 
     /**
      * Generate a slider with default values.
@@ -79,9 +79,9 @@ public class UIGenerationHelpers {
     /**
      * Generate the label for a model and bind it to the model-
      *
-     * @param stack The stack to add the ui elements to.
+     * @param stack     The stack to add the ui elements to.
      * @param rectangle The rectangle for the cell.
-     * @param model The model to bind to.
+     * @param model     The model to bind to.
      */
     public static void generateAndBindSetableCellRectangle(StackPane stack, Rectangle rectangle, SetableCellModel model) {
         Label setableCellTextLabel = UIGenerationHelpers.generateAndBindDefaultSetableCellTextLabel(model);
@@ -92,7 +92,7 @@ public class UIGenerationHelpers {
     /**
      * Generates a constraint cell with default values.
      *
-     * @param stack The stack to add the ui elements to.
+     * @param stack     The stack to add the ui elements to.
      * @param rectangle The rectangle for the cell.
      */
     public static void generateDefaultConstraintCell(StackPane stack, Rectangle rectangle) {
@@ -111,7 +111,7 @@ public class UIGenerationHelpers {
      * Generate a single constraint cell with default values.
      *
      * @param stack The stack to add the ui elements to.
-     * @param cell The single cell
+     * @param cell  The single cell
      */
     public static void generateDefaultSingleConstraintCell(StackPane stack, SingleConstraintCell cell) {
         switch (cell.getOrientation()) {
@@ -120,7 +120,7 @@ public class UIGenerationHelpers {
                 vLimit.setFont(defaultFont);
                 vLimit.setAlignment(Pos.BOTTOM_CENTER);
                 vLimit.paddingProperty().setValue(defaultVerticalLabelInset);
-                stack.setAlignment(vLimit, Pos.BOTTOM_CENTER);
+                StackPane.setAlignment(vLimit, Pos.BOTTOM_CENTER);
                 vLimit.setTextFill(Color.WHITE);
                 stack.getChildren().add(vLimit);
                 break;
@@ -129,7 +129,7 @@ public class UIGenerationHelpers {
                 hLimit.setAlignment(Pos.CENTER_RIGHT);
                 hLimit.paddingProperty().setValue(defaultHorizontalLabelInset);
                 hLimit.setFont(defaultFont);
-                stack.setAlignment(hLimit, Pos.CENTER_RIGHT);
+                StackPane.setAlignment(hLimit, Pos.CENTER_RIGHT);
                 hLimit.setTextFill(Color.WHITE);
                 stack.getChildren().add(hLimit);
                 break;
@@ -140,7 +140,7 @@ public class UIGenerationHelpers {
      * Generate a double constraint cell with default values.
      *
      * @param stack The stack to add the ui elements to.
-     * @param cell The single cell
+     * @param cell  The single cell
      */
     public static void generateDefaultDoubleConstraintCell(StackPane stack, DoubleConstraintCell cell) {
         Label vLimit = new Label(String.valueOf(cell.getVerticalMax()));
@@ -148,7 +148,7 @@ public class UIGenerationHelpers {
         vLimit.setFont(defaultFont);
         vLimit.paddingProperty().setValue(defaultVerticalLabelInset);
         vLimit.setAlignment(Pos.BOTTOM_CENTER);
-        stack.setAlignment(vLimit, Pos.BOTTOM_CENTER);
+        StackPane.setAlignment(vLimit, Pos.BOTTOM_CENTER);
         vLimit.setTextFill(Color.WHITE);
         stack.getChildren().add(vLimit);
 
@@ -157,7 +157,7 @@ public class UIGenerationHelpers {
         hLimit.paddingProperty().setValue(defaultHorizontalLabelInset);
         hLimit.setFont(defaultFont);
         hLimit.setAlignment(Pos.CENTER_RIGHT);
-        stack.setAlignment(hLimit, Pos.CENTER_RIGHT);
+        StackPane.setAlignment(hLimit, Pos.CENTER_RIGHT);
         hLimit.setTextFill(Color.WHITE);
 
         stack.getChildren().add(hLimit);

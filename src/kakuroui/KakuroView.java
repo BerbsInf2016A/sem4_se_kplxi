@@ -5,11 +5,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
-import javafx.scene.layout.Border;
-import javafx.scene.layout.BorderStroke;
-import javafx.scene.layout.BorderStrokeStyle;
-import javafx.scene.layout.BorderWidths;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -50,7 +45,7 @@ public class KakuroView {
      * Constructor for the view.
      *
      * @param controller The controller for the view.
-     * @param model The model for the view.
+     * @param model      The model for the view.
      */
     public KakuroView(KakuroController controller, KakuroModel model) {
         this.controller = controller;
@@ -105,7 +100,7 @@ public class KakuroView {
     /**
      * Gets cell for the specified position.
      *
-     * @param row The row position.
+     * @param row    The row position.
      * @param column The column position.
      * @return The cell at the position.
      */
@@ -121,7 +116,7 @@ public class KakuroView {
     /**
      * Gets the setable cell for the specified position.
      *
-     * @param row The row position.
+     * @param row    The row position.
      * @param column The column position.
      * @return The cell at the position.
      */
@@ -138,8 +133,8 @@ public class KakuroView {
      * Bind the cells of the kakuro solving algorithm to the ui rectangles.
      *
      * @param rectangle The rectangle which should be bound.
-     * @param row The row index.
-     * @param col The column index.
+     * @param row       The row index.
+     * @param col       The column index.
      * @return A stack pane containing the ui elements.
      */
     private StackPane bindKakuroCellToRectangle(Rectangle rectangle, int row, int col) {
@@ -147,7 +142,7 @@ public class KakuroView {
         StackPane stack = new StackPane();
 
         if (fieldCell instanceof ConstraintCell || fieldCell instanceof BlockingCell) {
-            rectangle.setFill(Color.web("0x0F1112",1.0));
+            rectangle.setFill(Color.web("0x0F1112", 1.0));
             stack.getChildren().add(rectangle);
             if (fieldCell instanceof ConstraintCell) {
                 UIGenerationHelpers.generateDefaultConstraintCell(stack, rectangle);
@@ -172,7 +167,7 @@ public class KakuroView {
      * Add a slider for the simulation speed to the ui.
      *
      * @param root The root ui element to add the slider to.
-     * @param row The row in which the slider should be placed.
+     * @param row  The row in which the slider should be placed.
      */
     private void addSimulationSliderToThePane(GridPane root, int row) {
         Label descriptionLabel = new Label("Simulation-Delay:");
@@ -199,7 +194,7 @@ public class KakuroView {
      * Add the button controls to the ui.
      *
      * @param root The ui root element to add the new ui elements to.
-     * @param row The row in which the buttons should be placed.
+     * @param row  The row in which the buttons should be placed.
      */
     private int addButtonControlsToThePane(GridPane root, int row) {
         Button startButton = UIGenerationHelpers.generateDefaultButton("Start");

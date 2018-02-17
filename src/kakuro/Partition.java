@@ -53,8 +53,8 @@ public class Partition {
     /**
      * A recursive method to generate the partitions.
      *
-     * @param n The value which should be partitioned.
-     * @param max The maximum.
+     * @param n      The value which should be partitioned.
+     * @param max    The maximum.
      * @param prefix The already generated prefix.
      * @param result The list to add the results to.
      */

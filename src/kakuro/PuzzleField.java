@@ -44,7 +44,7 @@ public class PuzzleField {
     /**
      * Get a specific cell.
      *
-     * @param row The row of the wanted cell.
+     * @param row    The row of the wanted cell.
      * @param column The column of the wanted cell.
      * @return The wanted cell.
      */

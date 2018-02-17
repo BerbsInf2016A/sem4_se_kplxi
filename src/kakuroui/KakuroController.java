@@ -72,6 +72,7 @@ public class KakuroController {
 
     /**
      * Get the property to bind the start button disabled property to.
+     *
      * @return
      */
     public SimpleBooleanProperty canStartProperty() {

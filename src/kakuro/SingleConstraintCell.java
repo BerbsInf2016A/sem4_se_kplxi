@@ -17,10 +17,10 @@ public class SingleConstraintCell extends ConstraintCell {
     /**
      * Constructor for the single constraint cell.
      *
-     * @param column The column of the cell.
-     * @param row The row of the cell.
+     * @param column      The column of the cell.
+     * @param row         The row of the cell.
      * @param orientation The orientation of the constraint.
-     * @param maxValue The max value of the constraint.
+     * @param maxValue    The max value of the constraint.
      */
     public SingleConstraintCell(int column, int row, Orientation orientation, int maxValue) {
         super(column, row);

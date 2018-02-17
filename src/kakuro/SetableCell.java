@@ -32,7 +32,7 @@ public class SetableCell extends Cell {
      * Constructor for a SetableCell.
      *
      * @param column The column of the cell.
-     * @param row The row of the cell.
+     * @param row    The row of the cell.
      */
     public SetableCell(int column, int row) {
         super(column, row);
@@ -55,8 +55,8 @@ public class SetableCell extends Cell {
      *
      * @param value The value to set.
      */
-    public void setValue(int value) {
-        this.value = OptionalInt.of(value);
+    public void setValue(OptionalInt value) {
+        this.value = value;
         this.valueChanged();
     }
 
@@ -65,8 +65,8 @@ public class SetableCell extends Cell {
      *
      * @param value The value to set.
      */
-    public void setValue(OptionalInt value) {
-        this.value = value;
+    public void setValue(int value) {
+        this.value = OptionalInt.of(value);
         this.valueChanged();
     }
 
@@ -121,6 +121,7 @@ public class SetableCell extends Cell {
 
     /**
      * Add a listener, which is interested in the event of a changed cell value.
+     *
      * @param listener The listener to add.
      */
     public void addValueChangedListener(ICellValueChangedListener listener) {

@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/src/kakuro/KakuroSolver.java" line="125" mnemonic="8" />
+    <bookmark url="file://$PROJECT_DIR$/src/kakuro/KakuroSolver.java" line="122" mnemonic="8" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2861745c-1a50-4c36-8527-224cd3c4c195" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/kakuro/CellSet.java" afterPath="$PROJECT_DIR$/src/kakuro/CellSet.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/kakuro/DoubleConstraintCell.java" afterPath="$PROJECT_DIR$/src/kakuro/DoubleConstraintCell.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/kakuro/Helpers.java" afterPath="$PROJECT_DIR$/src/kakuro/Helpers.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/kakuro/KakuroSolver.java" afterPath="$PROJECT_DIR$/src/kakuro/KakuroSolver.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/kakuro/Partition.java" afterPath="$PROJECT_DIR$/src/kakuro/Partition.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/kakuro/PuzzleField.java" afterPath="$PROJECT_DIR$/src/kakuro/PuzzleField.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/kakuro/SetableCell.java" afterPath="$PROJECT_DIR$/src/kakuro/SetableCell.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/kakuro/SingleConstraintCell.java" afterPath="$PROJECT_DIR$/src/kakuro/SingleConstraintCell.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/kakuroui/KakuroController.java" afterPath="$PROJECT_DIR$/src/kakuroui/KakuroController.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/kakuroui/KakuroView.java" afterPath="$PROJECT_DIR$/src/kakuroui/KakuroView.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/kakuroui/UIGenerationHelpers.java" afterPath="$PROJECT_DIR$/src/kakuroui/UIGenerationHelpers.java" />
     </list>
@@ -181,6 +189,7 @@
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.0" />
     <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary" value="JUnit4" />
+    <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
   </component>
   <component name="RecentsManager">
     <key name="CreateTestDialog.RecentsKey">
@@ -435,7 +444,7 @@
       <workItem from="1518596370283" duration="12529000" />
       <workItem from="1518721800397" duration="1739000" />
       <workItem from="1518771026364" duration="24544000" />
-      <workItem from="1518858821704" duration="2658000" />
+      <workItem from="1518858821704" duration="2695000" />
     </task>
     <servers />
   </component>
@@ -472,7 +481,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="41470000" />
+    <option name="totallyTimeSpent" value="41507000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -492,6 +501,7 @@
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25799572" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32934782" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -504,7 +514,6 @@
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Coverage" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2563966" sideWeight="0.5" order="4" side_tool="true" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32934782" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
     <layout-to-restore>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -916,7 +925,7 @@
         <state relative-caret-position="444">
           <caret line="101" column="40" lean-forward="false" selection-start-line="101" selection-start-column="40" selection-end-line="101" selection-end-column="40" />
           <folding>
-            <element signature="imports" expanded="true" />
+            <element signature="imports" expanded="false" />
           </folding>
         </state>
       </provider>
