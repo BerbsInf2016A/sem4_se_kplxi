@@ -141,7 +141,7 @@ public class KakuroSolver {
                 }
             }
         }
-// TODO refactor duplicate code.
+
         // Horizontal set has a combination set, vertical set has no combination set.
         if (hSet.getCurrentlyUsedCombination() != null && vSet.getCurrentlyUsedCombination() == null) {
             for (List<Integer> vCombination : vSet.getPossibleCombinations()) {
